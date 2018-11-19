@@ -1,10 +1,8 @@
 [Composer](https://getcomposer.org/) - менеджер зависимостей для PHP.
 
-![Table of Contents](ToC)
-
 # Установка Composer на macOS
 
-Сначала устанавливаем [HomeBrew](brew.md), затем с его помощью устанавливаем сам Composer:
+Сначала устанавливаем [HomeBrew](brew.md), затем с его помощью устанавливаем Composer:
 
     $ brew install composer
 
