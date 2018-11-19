@@ -1,6 +1,6 @@
 [Composer](https://getcomposer.org/) - менеджер зависимостей для PHP.
 
-{{TOC}}
+![Table of Contents](ToC)
 
 # Установка Composer на macOS
 
