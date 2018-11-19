@@ -2,7 +2,7 @@
 
 ## Предпочтительный вариант через HomeBrew:
 
-[Установить HomeBrew ](https://brew.sh)
+[Установить HomeBrew ](brew.md)
 
 	$ brew install composer
 
