@@ -1,66 +1,61 @@
-# Установка
+[Composer](https://getcomposer.org/) - менеджер зависимостей для PHP.
 
-## Предпочтительный вариант через HomeBrew:
+{{TOC}}
 
-[Установить HomeBrew ](brew.md)
+# Установка Composer на macOS
 
-	$ brew install composer
+Сначала устанавливаем [HomeBrew](brew.md), затем с его помощью устанавливаем сам Composer:
+
+    $ brew install composer
 
 Важно, что лучше чтобы сначала был установлен php через HomeBrew.
 
-## Установка напрямую
-
-<https://getcomposer.org/download/>
-
-Скачиваем (по умолчанию в папку пользователя: ~/):
-
-	$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-
-Проверяем:
-
-	$ php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-
-Устанавливаем «composer.phar»:
-
-	$ php composer-setup.php
-
-Удаляем installer:
-
-	$ php -r "unlink('composer-setup.php');"
-
-Используем, например:
-
-	$ php composer-setup.php global require "laravel/installer"
-
-Или ставим глобально (пример на Mac):
-
-	$ mv composer.phar /usr/local/bin/composer
-
-Тогда используем так, например:
-
-	$ composer global require "laravel/installer"
-
 # Использование
 
-Пакеты для установки можно посмотреть на https://packagist.org/ там можно найти тот же Laravel.
+[Packagist](https://packagist.org) - репозиторий пакетов PHP.
 
-Описание команд Composer https://modzone.ru/blog/2016/12/02/understanding-composer/
+Добавить новый пакет в composer.json в текущем каталоге (в секцию "require") и установить:
 
-Команда для добавления нового пакета:
+    $ composer require doctrine/dbal
 
-	$ composer require doctrine/dbal
+Или добавить новый пакет в секцию "require-dev"для использования только в среде разработки (на локальном компьютере):
 
-Или для добавления нового пакета только для разработки (в секцию require-dev в composer.json):
+    $ composer require doctrine/dbal —dev
 
-	$ composer require phpdocumentor —dev
+Установка зависимостей из composer.json с учетом composer.lock:
+    
+    $ composer install
 
-Удаление добавленного пакета либо через команду:
+> Команда проверяет существует ли файл composer.lock если нет, проверяет зависимости и создает его, иначе устанавливает версии пакетов, указанные в нём - это нужно для того, чтобы у всех разработчиков были одинаковые версии пакетов.
 
-	$ composer remove doctrine/dbal
+На рабочем сервере, стоит установить зависимости исключив пакеты в секции "require-dev":
 
-Либо удалить строчку из файла composer.json с названием пакета, и выполнить команду обновления пакетов:
+    $ composer install --no-dev
+    
+Обновление зависимостей до последних версий:
 
-	$ composer update
+    $ composer update
 
-Список всех командам: 
-http://composer.json.jolicode.com
+> Команда обновит файл composer.lock.
+
+Удаление пакета из composer.json и удаление ненужных зависимостей:
+
+    $ composer remove doctrine/dbal
+    $ composer update doctrine/dbal
+
+Обновление автозагрузчика PHP классов:
+
+    $ composer dump-autoload
+    
+На рабочем сервере стоит использовать оптимизацию автозагрузчика одной из команд:
+
+    $ composer dump-autoload --optimize
+    $ composer dump-autoload -o
+
+> Оптимизация может ускорить работу автозагрузчика до 30%.
+
+# Ссылки
+
+* [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/))
+* [Composer Cheat Sheet for developers](http://composer.json.jolicode.com)
+* [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15)
