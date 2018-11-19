@@ -8,6 +8,12 @@
 
 Важно, что лучше чтобы сначала был установлен php через HomeBrew.
 
+# Ссылки
+
+* [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/)).
+* [Composer Cheat Sheet for developers](http://composer.json.jolicode.com).
+* [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15).
+
 # Использование
 
 [Packagist](https://packagist.org) - репозиторий пакетов PHP.
@@ -51,9 +57,3 @@
     $ composer dump-autoload -o
 
 > Оптимизация может ускорить работу автозагрузчика до 30%.
-
-# Ссылки
-
-* [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/))
-* [Composer Cheat Sheet for developers](http://composer.json.jolicode.com)
-* [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15)
