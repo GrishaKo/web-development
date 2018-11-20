@@ -270,7 +270,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ git diff master..origin/master
 
-**После того как мы готов принять изменения, необходимо выполнить слияние**:
+**После того как мы готовы принять изменения, необходимо выполнить слияние**:
 
 	$ git merge origin/master
 	
