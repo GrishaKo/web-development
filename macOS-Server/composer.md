@@ -1,6 +1,8 @@
+# Заметки по использованию Composer
+
 [Composer](https://getcomposer.org/) - менеджер зависимостей для PHP.
 
-# Установка Composer на macOS
+## Установка Composer на macOS
 
 Сначала устанавливаем [HomeBrew](brew.md), затем с его помощью устанавливаем Composer:
 
@@ -8,11 +10,11 @@
 
 Важно, что лучше чтобы сначала был установлен php через HomeBrew.
 
-# Ссылки
+## Ссылки
 
-* [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/)).
-* [Composer Cheat Sheet for developers](http://composer.json.jolicode.com).
-* [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15).
+1. [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/).
+2. [Composer Cheat Sheet for developers](http://composer.json.jolicode.com).
+3. [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15).
 
 # Использование
 
