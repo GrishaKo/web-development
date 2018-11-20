@@ -16,7 +16,7 @@
 2. [Composer Cheat Sheet for developers](http://composer.json.jolicode.com).
 3. [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15).
 
-# Использование
+## Использование
 
 [Packagist](https://packagist.org) - репозиторий пакетов PHP.
 
