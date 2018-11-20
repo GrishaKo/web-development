@@ -1,6 +1,7 @@
 # Заметки по использованию Git
 
 [Git](https://git-scm.com/) -  распределённая система управления версиями.
+https://github.com/GrigoryKovalev/web-development-notes.git
 
 ## Установка на macOS
 
@@ -12,9 +13,7 @@
 
 1. [Документация](https://git-scm.com/doc).
 2. [Pro Git book v1](https://git-scm.com/book/ru/v1). 
-2. [Обучающий интерактивный тур](https://githowto.com/ru).
-3. <https://ru.stackoverflow.com/questions/524856/Просмотр-изменений-на-удаленном-репозитории>.
-4. [Видео инструкция по клонированию проекта Laravel из удаленного репозитория](https://www.youtube.com/watch?v=PNka4eZ5ojg).
+3. [Обучающий интерактивный тур](https://githowto.com/ru).
 
 ## Использование
 
