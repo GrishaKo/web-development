@@ -318,7 +318,168 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 Изменение URL:
 
-	$ git remote set-url origin GITSERVER:REPOSITORY.git 
+	$ git remote set-url origin GITSERVER:REPOSITORY.git
+
+### Работа с ветками
+
+Проект стоит сразу разделить на две ветки: master и develop.
+
+Тогда, например, можем вести разработку в ветке develop, ее же выгружаем в удаленный репозиторий в соответствующую ветку develop, на рабочий сервер получаем данные в ветку master из удаленного репозитория из ветки develop.
+
+В необходимости отката изменений, на рабочий сервер получаем данные в ветку master из удаленного репозитория из ветки master.
+
+Когда убеждаем в правильной работе ветки develop, сливаем ее с веткой master в удаленном репозитории.
+
+#### Создание новой ветки
+
+	$ git branch develop
+
+#### Просмотр веток
+
+Посмотреть список имеющихся веток:
+	
+	$ git branch
+	develop
+	* master
+
+> Символ *, стоящий перед веткой master, указывает на ветку, на которой вы находитесь в настоящий момент.
+
+Посмотреть последний коммит на каждой из веток:
+	
+	$ git branch -v
+
+Посмотреть ветки которые слили и не слили:
+
+	$ git branch --merged
+	develop
+	* master
+	$ git branch --no-merged
+
+Посмотреть на какую ветку указывает HEAD:
+
+	$ git log --oneline --decorate
+	f11b0d0 (HEAD -> develop, origin/master, master) Update
+	4a88b5b Update
+	ff01401 Init
+	
+#### Переключение веток
+
+	$ git checkout develop
+	$ git branch
+	* develop
+	master
+
+Создадим тестовый файл и зафиксируем изменение:
+
+	$ echo "test" > test.rb
+	$ git add .
+	$ git commit -m 'made a change'
+	
+Посмотреть куда указывает HEAD:
+
+	$ git log --oneline --decorate
+	684ff7a (HEAD -> develop) made a change
+	f11b0d0 (origin/master, master) Update
+	4a88b5b Update
+	ff01401 Init	
+	
+Переключимся обратно на ветку master:
+
+	$ git checkout master
+	
+> Эта команда сделала две вещи. Она переместила указатель HEAD назад на ветку "master" и вернула файлы в рабочем каталоге в то состояние, которое было сохранено в снимке (snapshot), на который указывает ветка. Это также означает, что все изменения, вносимые с этого момента, будут отнесены к старой версии проекта. Другими словами, откатилась вся работа, выполненная в ветке "develop".
+
+Сделаем еще несколько изменений и очередной коммит:
+
+	$ > test.rb
+	#or
+	$ nano test.rb
+	$ git add .
+	$ git commit -m 'made a change'
+	$ echo '1' > test.rb
+	$ git commit -a -m 'made other changes'
+
+> Теперь история проекта разделилась. Мы создали ветку, переключились в нее, поработали, а затем вернулись в основную ветку и поработали в ней. Эти изменения изолированы друг от друга: мы можем свободно переключаться туда и обратно, а когда будем готовы — сольем их вместе.
+	
+Посмотрим историю наших коммитов и увидем, где находятся указатели веток, и как ветвилась история проекта:
+	
+	$ git log --oneline --decorate --graph --all
+	* 0807b43 (HEAD -> master) made other changes
+	* 8a9f787 made a change
+	| * 684ff7a (develop) made a change
+	|/  
+	* f11b0d0 (origin/master) Update
+	* 4a88b5b Update
+	* ff01401 Init
+
+#### Основы ветвления и слияния
+
+Создадим новую ветку и сразу выберем ее:
+
+	$ git checkout -b test
+	
+Внесем изменения:
+
+	$ > index.html
+	$ git add .
+	$ git commit -m 'added a new footer [test]'
+	
+Переключимся обратно на ветку master и выполним слияние с веткой test:
+
+	$ git checkout master
+	$ git merge test
+	Fast-forward
+ 	index.html | 0
+ 	1 file changed, 0 insertions(+), 0 deletions(-)
+ 	create mode 100644 index.html
+
+> Фразу "fast-forward" (перемотка) означает что коммит, на который указывала ветка, которую мы слили, был прямым потомком того коммита, на котором мы находились, Git просто переместил указатель ветки вперед (так как нет разветвления в работе).
+
+Теперь можно удалить ветку test:
+
+	$ git branch -d test
+
+Перейдем на ветку develop и сольем ее с веткой master:
+
+	$ git checkout develop
+	$ git merge master
+	КОНФЛИКТ (добавление/добавление): Конфликт слияния в test.rb
+	Не удалось провести автоматическое слияние; исправьте конфликты и 	сделайте коммит результата.
+
+> Мы получим сообщение об ошибке, а файл test.rb на ветке develop будет содержать две версии файла, в начале текущую, в конце с ветки master.
+
+Пробуем исправить конфликт, например, сначала переименуем файл test.rb, и сделаем коммит:
+
+	$ mv test.rb test.bak.rb
+	$ git commit -m "Rename test.rb"
+	
+Теперь перейдем на ветку master и выполним слияние с веткой develop:
+	
+	$ git merge develop
+	
+Файл test.rb у нас теперь отсутствует вообще в ветке master, копируем файл test.bak.rb в файл test.rb. и оставляем только старое значение (между символами "=======" и ">>>>>>> master"), фиксируем изменения:
+
+	$ cp test.bak.rb test.rb
+	$ nano test.rb
+	$ git add .
+	$ git commit -m "Update after merge"
+
+Переключимся на ветку develop, объединим ее с master, отредактируем test.rb и удалим test.bak.rb, и зафиксируем изменения:
+
+	$ git checkout develop
+	$ git merge master
+	$ mv test.bak.rb test.rb
+	$ nano test.rb
+	#сохраним изменения из обоих веток
+	test
+	1
+	$ git add .
+	$ git commit -m "Merge test.rb"
+
+Вернемся в ветку merge и объединим ее с веткой develop:
+
+	$ git checkout master
+	$ git merge develop
 
 ### Настройка своего Git-сервера
 
