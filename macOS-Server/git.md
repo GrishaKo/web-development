@@ -1,11 +1,55 @@
-[toc]
-
 # Заметки по использованию Git
 
 [Git](https://git-scm.com/) -  распределённая система управления версиями.
-https://github.com/GrigoryKovalev/web-development-notes.git
 
 <!--ts-->
+
+  * [Установка на macOS](#установка-на-macos)
+  * [Ссылки](#ссылки)
+  * [Использование](#использование)
+     * [Вызов помощи](#вызов-помощи)
+     * [Конфигурация](#конфигурация)
+        * [Добавление пользователя](#добавление-пользователя)
+        * [Конфигурация переноса строк](#конфигурация-переноса-строк)
+        * [Настройка игнорирования файлов для текущего пользователя](#настройка-игнорирования-файлов-для-текущего-пользователя)
+        * [Текстовый редактор по умолчанию](#текстовый-редактор-по-умолчанию)
+        * [Алиасы](#алиасы)
+        * [Просмотр конфигурации](#просмотр-конфигурации)
+     * [Создание репозитория](#создание-репозитория)
+     * [Запись изменений в репозиторий](#запись-изменений-в-репозиторий)
+        * [Определение состояния файлов](#определение-состояния-файлов)
+        * [Добавление файлов для отслеживания](#добавление-файлов-для-отслеживания)
+        * [Фиксация изменений (добавление в репозиторий)](#фиксация-изменений-добавление-в-репозиторий)
+        * [Игнорирование индексации](#игнорирование-индексации)
+        * [Удаление файлов](#удаление-файлов)
+        * [Перемещение файлов](#перемещение-файлов)
+     * [Просмотр истории коммитов](#просмотр-истории-коммитов)
+     * [Отмена изменений](#отмена-изменений)
+     * [Работа с удаленными репозиториями](#работа-с-удаленными-репозиториями)
+        * [Отображение удалённых репозиториев](#отображение-удалённых-репозиториев)
+        * [Добавление удалённых репозиториев](#добавление-удалённых-репозиториев)
+        * [Fetch и Pull - Получение изменений из удаленного репозитория](#fetch-и-pull---получение-изменений-из-удаленного-репозитория)
+        * [Push - отправка изменений в удаленный репозиторий](#push---отправка-изменений-в-удаленный-репозиторий)
+        * [Удаление и переименование удаленных репозиториев](#удаление-и-переименование-удаленных-репозиториев)
+     * [Работа с ветками](#работа-с-ветками)
+        * [Ссылки](#ссылки-1)
+        * [Создание новой ветки](#создание-новой-ветки)
+        * [Просмотр веток](#просмотр-веток)
+        * [Переключение веток](#переключение-веток)
+        * [Основы ветвления и слияния](#основы-ветвления-и-слияния)
+        * [Удаленные ветки](#удаленные-ветки)
+     * [Настройка своего Git-сервера](#настройка-своего-git-сервера)
+        * [Клонирование локального репозитория в новый "голый репозиторий"](#клонирование-локального-репозитория-в-новый-голый-репозиторий)
+        * [Размещение "голого репозитория" на Git-сервере](#размещение-голого-репозитория-на-git-сервере)
+        * [Клонирование репозитория c удаленного Git-сервера](#клонирование-репозитория-c-удаленного-git-сервера)
+     * [Настройка своего Git-сервера с помощью Gitolite (предпочтительно)](#настройка-своего-git-сервера-с-помощью-gitolite-предпочтительно)
+        * [Ссылки](#ссылки-2)
+        * [Установка](#установка)
+        * [Настройка](#настройка)
+        * [Пример использования](#пример-использования)
+
+<!-- Added by: grisha_k, at:  -->
+
 <!--te-->
 
 ## Установка на macOS
@@ -67,6 +111,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Далее в папке пользователя нужно создать и отредактировать файл .gitexcludes, добавив файл .DS_Store и другие необходимые файлы, каждый с новой строки:
 
 	$ nano ~/.gitexcludes
+		# добавляем строки
 	.DS_Store
 	.idea/
 
@@ -76,10 +121,16 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ git config --global core.editor "nano"
 
+#### Алиасы
+
+Например, установим свою команду "git hist", которая будет выводить "git log" с дополнительными опциями: 
+
+	$ git config --global alias.hist "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short"
+
 #### Просмотр конфигурации
 
 	$ git config --list
-	# или	
+		# или	
 	$ git config -l	
 
 ### Создание репозитория
@@ -111,7 +162,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Сравнить индексированные изменения с последним коммитом:
 
 	$ git diff --cached
-	# или
+		# или
 	$ git diff --staged
 
 Более подробно просмотр неиндексированных изменений:
@@ -123,7 +174,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Добавление всех файлов для отслеживания в текущем каталоге. (например: ~/Sites/localhost):
 	
 	$ git add all
-	# или
+		# или
 	$ git add .
 
 Добавление файлов из определенного каталога (например: ~/Sites/localhost/app):
@@ -159,6 +210,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ cd ~/Sites/localhost
 	$ nano .gitignore
+		# добавляем строку
 	/vendor
 
 > Каталог /vendor будет игнорироваться при добавлении файлов на отслеживание с помощью "git add".
@@ -187,7 +239,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 #### Перемещение файлов
 	
 	$ git mv test.php test_new.php
-	# или
+		# или
 	$ mv test.php test_new.php
 	$ git rm test.php
 	$ git add test_new.php
@@ -244,9 +296,8 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ git add .
 	$ git status
-	# ...
-	# (используйте «git reset HEAD <файл>…», чтобы убрать из индекса)
-	# ...
+	...
+	(используйте «git reset HEAD <файл>…», чтобы убрать из индекса)
 
 Отмена изменений (безвозвратная) в файле после добавления его на отслеживание:
 
@@ -255,10 +306,9 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Подсказка по команде отображается после внесения изменения в отслеживаемый файл и просмотра статуса:
 
 	$ git status
-	# ...
-	# (используйте «git checkout -- <файл>…», чтобы отменить изменения
-	# ...	
-
+	...
+	(используйте «git checkout -- <файл>…», чтобы отменить изменения
+	
 ### Работа с удаленными репозиториями
 
 Если удаленный репозиторий был клонирован, то он автоматически добавляется с именем "origin" и локальная ветка "master" будет добавлена для отслеживания удаленной ветки "origin/master".
@@ -268,13 +318,10 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Посмотреть сокращенные названия репозиториев:
 
 	$ git remote
-	# илиigin git:test.git
 
 Просмотр сокращенных названий репозиториев и соответствующих им Url:
 
 	$ git remote -v
-	# илиigin https://github.com/user/test.git (fetch)
-	# илиigin https://github.com/user/test.git (push)
 
 Инспекция удаленного репозитория:
 
@@ -301,7 +348,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 **Теперь можно посмотреть изменения**, т.е. какие именно коммиты сейчас отделяют локальный указатель от указателя, полученного из удалённого репозитория: 
 
 	$ git log master..origin/master
-	# или
+		# или
 	$ git log master..origin/master
 
 > master - текущая локальная ветка.
@@ -331,7 +378,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ git branch --set-upstream-to=origin/master master
 
-Просмотреть отслеживаемые метки:
+Просмотреть отслеживаемые ветки:
 
 	$ git branch -vv	
 	
@@ -343,7 +390,11 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ git push origin master
 
-> Отправка изменений в удаленный репозиторий origin и ветку master.
+> Отправка изменений в удаленный репозиторий origin локальной ветки master (что означает "возьми мою локальную ветку master и обнови ей удалённую ветку master").
+
+Чтобы отправить локальную ветку (master) на удаленный сервер в другую ветку (например: master2), нужно указать имя удаленной ветки:
+
+	$ git push origin master:master2
 
 Можно установить внешнюю ветку как вышестоящую для этой ветки (автоматически добавляется при клонировании репозитория), тоже самое, что установить информацию об отслеживаемой ветке:
 
@@ -377,9 +428,29 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 Когда убеждаем в правильной работе ветки develop, сливаем ее с веткой master в удаленном репозитории.
 
+#### Ссылки
+
+1. [Удачная модель ветвления для Git](https://m.habr.com/post/106912/) (перевод статьи Vincent Driessen).
+2. [A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/) (оригинал статьи Vincent Driessen).
+
 #### Создание новой ветки
 
+Создадим новую ветку разработки:
+
 	$ git branch develop
+	
+Если мы инициализируем пустой репозиторий, то сначала должны выполнить первый коммит:
+
+	$ cd ~/Sites
+	$ mkdir test
+	$ cd test
+	$ git init
+	$ echo "# Index" > index.md
+		# или
+		# $ nano > index.md
+		# # Index
+	$ git add .
+	$ git commit -m "init"
 
 #### Просмотр веток
 
@@ -395,19 +466,12 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 	
 	$ git branch -v
 
-Посмотреть ветки которые слили и не слили:
-
-	$ git branch --merged
-	develop
-	* master
-	$ git branch --no-merged
-
 Посмотреть на какую ветку указывает HEAD:
 
 	$ git log --oneline --decorate
-	f11b0d0 (HEAD -> develop, origin/master, master) Update
-	4a88b5b Update
-	ff01401 Init
+	df6b504 (HEAD -> master, develop) init
+	
+> HEAD указывает на ветки master и develop, для которых последний коммит "init"
 	
 #### Переключение веток
 
@@ -416,19 +480,18 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 	* develop
 	master
 
-Создадим тестовый файл и зафиксируем изменение:
+Внесем и зафиксируем изменение:
 
-	$ echo "test" > test.rb
-	$ git add .
-	$ git commit -m 'made a change'
+	$ echo -e "\nDevelop" >> index.md
+	$ git commit -a -m 'update index'
 	
-Посмотреть куда указывает HEAD:
+Посмотрим на какую ветку теперь указывает HEAD:
 
 	$ git log --oneline --decorate
-	684ff7a (HEAD -> develop) made a change
-	f11b0d0 (origin/master, master) Update
-	4a88b5b Update
-	ff01401 Init	
+	f8648f2 (HEAD -> develop) update index
+	df6b504 (master) init
+	
+> HEAD указывает теперь на ветку develop, для которой последний коммит "update index"
 	
 Переключимся обратно на ветку master:
 
@@ -438,96 +501,157 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 Сделаем еще несколько изменений и очередной коммит:
 
-	$ > test.rb
-	# или
-	$ nano test.rb
+	$ > readme.md
 	$ git add .
-	$ git commit -m 'made a change'
-	$ echo '1' > test.rb
-	$ git commit -a -m 'made other changes'
+	$ echo -e "\nMaster" >> index.md
+	$ git commit -a -m 'update index'
 
-> Теперь история проекта разделилась. Мы создали ветку, переключились в нее, поработали, а затем вернулись в основную ветку и поработали в ней. Эти изменения изолированы друг от друга: мы можем свободно переключаться туда и обратно, а когда будем готовы — сольем их вместе.
+> Теперь история проекта разделилась. Мы создали ветку develop, переключились в нее, поработали, а затем вернулись в основную ветку master и поработали в ней. Эти изменения изолированы друг от друга: мы можем свободно переключаться туда и обратно, а когда будем готовы — сольем их вместе.
 	
 Посмотрим историю наших коммитов и увидем, где находятся указатели веток, и как ветвилась история проекта:
 	
 	$ git log --oneline --decorate --graph --all
-	* 0807b43 (HEAD -> master) made other changes
-	* 8a9f787 made a change
-	| * 684ff7a (develop) made a change
+	* 109bbee (HEAD -> master) update index
+	| * f8648f2 (develop) update index
 	|/  
-	* f11b0d0 (origin/master) Update
-	* 4a88b5b Update
-	* ff01401 Init
+	* df6b504 init
 
 #### Основы ветвления и слияния
 
-Создадим новую ветку и сразу выберем ее:
+Посмотреть ветки которые слили и не слили:
 
-	$ git checkout -b test
+	$ git branch --merged
+	$ git branch --no-merged
 	
-Внесем изменения:
+**Создадим новую ветку исправлений**, сразу выберем ее и внесем необходимые изменения:
 
-	$ > index.html
-	$ git add .
-	$ git commit -m 'added a new footer [test]'
+	$ git checkout -b hotfix-0.1.1
+	$ echo "# Test version 0.1.1" > readme.md
+	$ git commit -a -m 'Bumped version number to 0.1.1'
+
+Внесем исправление:
 	
-Переключимся обратно на ветку master и выполним слияние с веткой test:
+	$ git mv readme.md README.md	
+	$ git commit -a -m 'rename readme'
+	
+Закроем ветку исправлений, начав с переключения обратно на ветку master, выполним слияние с веткой исправлений и пометим новую версию тегом:
 
 	$ git checkout master
-	$ git merge test
-	Fast-forward
- 	index.html | 0
- 	1 file changed, 0 insertions(+), 0 deletions(-)
- 	create mode 100644 index.html
+	$ git merge --no-ff hotfix-0.1.1
+	$ git tag -a 0.1.1
+	
+> Флаг --no-ff вынуждает Git всегда создавать новый объект коммита при слиянии, даже если слияние может быть осуществлено алгоритмом fast-forward. Это позволяет не терять информацию о том, что ветка существовала, и группирует вместе все внесённые изменения. 
+> Fast-forward (перемотка) означает что коммит, на который указывала ветка, которую мы слили, был прямым потомком того коммита, на котором мы находились, Git просто переместил указатель ветки вперед (так как нет разветвления в работе).
 
-> Фразу "fast-forward" (перемотка) означает что коммит, на который указывала ветка, которую мы слили, был прямым потомком того коммита, на котором мы находились, Git просто переместил указатель ветки вперед (так как нет разветвления в работе).
+Теперь мы можем отправить изменения в удаленный репозиторий и метку версии:
 
-Теперь можно удалить ветку test:
+	$ git push origin master 0.1.1
 
-	$ git branch -d test
+> 0.1.1 - метка версии, ее необходимо обязательно указывать, чтобы передать в удаленный репозиторий.
 
-Перейдем на ветку develop и сольем ее с веткой master:
+Затем вольем исправление в ветку разработки (develop):
 
 	$ git checkout develop
-	$ git merge master
-	КОНФЛИКТ (добавление/добавление): Конфликт слияния в test.rb
-	Не удалось провести автоматическое слияние; исправьте конфликты и 	сделайте коммит результата.
+	$ git merge --no-ff hotfix-0.1.1
+	Автослияние index.md
+	КОНФЛИКТ (содержимое): Конфликт слияния в index.md
+	Не удалось провести автоматическое слияние; исправьте конфликты и сделайте коммит результата.
 
-> Мы получим сообщение об ошибке, а файл test.rb на ветке develop будет содержать две версии файла, в начале текущую, в конце с ветки master.
+> Так как до этого у нас было разветвление ветки master и develop, потому что в каждой ветки мы создали файл index.md с разным содержимым, а ветку hotfix-0.1.1 сливали с веткой master, у нас произошел конфликт слияния, поэтому на ветке develop в файл index.md добавлено содержимое из ветки master.
 
-Пробуем исправить конфликт, например, сначала переименуем файл test.rb, и сделаем коммит:
+Теперь исправим конфликт слияния веток develop и hotfix-0.1.1, изменив содержимое файла index.md и сделав коммит:
 
-	$ mv test.rb test.bak.rb
-	$ git commit -m "Rename test.rb"
+	$ cat index.md
+	# Index
+	Develop
+	<<<<<<< HEAD
+	=======
+	Master
+	>>>>>>> hotfix-0.1.1
+	$ echo -e "# Index\n\nMaster\n\nDevelop" > index.md
+	$ git commit -a -m 'merge index'
 	
-Теперь перейдем на ветку master и выполним слияние с веткой develop:
-	
-	$ git merge develop
-	
-Файл test.rb у нас теперь отсутствует вообще в ветке master, копируем файл test.bak.rb в файл test.rb. и оставляем только старое значение (между символами "=======" и ">>>>>>> master"), фиксируем изменения:
+Завершим закрытие ветки исправлений, удалив ее и отправив изменения в удаленный репозиторий:
 
-	$ cp test.bak.rb test.rb
-	$ nano test.rb
+	$ git branch -d hotfix-0.1.1
+	$ git push origin develop
+
+**Создадим новую ветку функциональности**, сразу выберем ее, добавим новую фичу в проект и вернемся обратно на ветку develop:
+
+	$ git checkout -b feature_license develop
+	$ echo 'The License' > LICENSE.md
 	$ git add .
-	$ git commit -m "Update after merge"
+	$ git commit -m 'create license'
+	$ git checkout develop
 
-Переключимся на ветку develop, объединим ее с master, отредактируем test.rb и удалим test.bak.rb, и зафиксируем изменения:
+В будущем, когда мы завершим новую фичу, мы вольем ее в ветку develop, удалим и отправим в удаленный репозиторий:
 
 	$ git checkout develop
-	$ git merge master
-	$ mv test.bak.rb test.rb
-	$ nano test.rb
-	#сохраним изменения из обоих веток
-	test
-	1
-	$ git add .
-	$ git commit -m "Merge test.rb"
+	$ git merge --no-ff feature_license
+	$ git branch -d feature_license
+	$ git push origin develop	
+	
+**Создадим новую ветку релиза:** 	
+	
+	$ git checkout -b release-1.0 develop
+	$ echo "# Test version 1.0" > readme.md
+	$ git commit -a -m "Bumped version number to 1.0"
 
-Вернемся в ветку merge и объединим ее с веткой develop:
+Закроем ветку релиза, начав с переключения обратно на ветку master, выполним слияние с веткой релиза, пометим новую версию тегом и отправив изменения в удаленный репозиторий:
 
 	$ git checkout master
-	$ git merge develop
+	$ git merge --no-ff release-1.0
+	$ git tag -a 1.0
+	$ git push origin master 1.0
+	
+Если забыли отправить изменения с указанием метки версии, то можно отправить все метки в удаленный репозиторий отдельной командой:
 
+	$ git push origin --tags
+
+Затем вольем релиз в ветку разработки (develop):
+
+	$ git checkout develop
+	$ git merge --no-ff release-1.0
+	$ git push origin develop
+
+Завершим закрытие ветки релиза, удалив ее:
+	
+	$ git branch -d release-1.0
+	
+#### Удаленные ветки
+
+После клонирования удаленного репозитория (или получения изменений), который содержит несколько веток, сначала мы увидим только локальную ветку master:
+
+	$ git branch
+	* master
+
+Чтобы увидеть удаленные ветки, необходимо выполнить команду:
+
+	$ git branch -a
+	* master
+	remotes/origin/HEAD -> origin/master
+	remotes/origin/develop
+	remotes/origin/master	
+	
+Далее необходимо перейти на удаленную ветку, чтобы перенести ее в локальные, при этом отслеживание удаленной метки будет добавлено автоматически:
+
+	$ git checkout develop
+	$ git branch -vv	
+
+Или создать локальную ветку на основе удаленной:
+
+	$ git checkout -b develop origin/develop
+	
+Если для локальной ветки необходимо изменить отслеживаемую ветку, необходимо выполнить:
+	
+	$ git branch -u origin/develop	
+	
+Удаление удаленной ветки:
+
+	$ git push origin --delete develop
+	
+> Как правило, Git-сервер оставит данные на некоторое время, пока не запустится сборщик мусора.
+	
 ### Настройка своего Git-сервера
 
 #### Клонирование локального репозитория в новый "голый репозиторий"
@@ -588,7 +712,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 Далее необходимо клонировать репозиторий Gitolite и установить в домашнем каталоге:
 
-	$ git clone git://github.com/sitaramc/gitolite
+	$ git clone git://github.com/user/gitolite
 	$ gitolite/install -ln
 
 Теперь, нужно создать каталог /bin в домашнем каталоге (~/git/bin):
@@ -598,9 +722,9 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Добавить $HOME/bin в $PATH:
 
 	$ sudo nano ~/.bash_profile
-	#вставляем строку
+		# вставляем строку
 	export PATH=$PATH:$HOME/bin
-	#сохраняем, выходим и выполняем	
+		# сохраняем, выходим и выполняем	
 	$ source ~/.bash_profile
 	
 И только после этого выполняем последнюю команду:
@@ -636,13 +760,13 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 
 	$ cd ~/SITES/gitolite-admin
 	$ ls
-	# conf keydir
+	conf keydir
 	$ find conf keydir -type f
-	# conf/gitolite.conf keydir/grishak.pub
+	conf/gitolite.conf keydir/grishak.pub
 	$ cat conf/gitolite.conf
-	# repo gitolite-admin
+	repo gitolite-admin
 	# 	RW+     =   USER
-	# repo testing
+	repo testing
 	# 	RW+     =   @all
 
 > /conf - каталог содержит файл gitolite.conf для настроек уровня доступа к репозиториям.
@@ -657,7 +781,7 @@ https://github.com/GrigoryKovalev/web-development-notes.git
 Добавляем права на управление новым репозиторием "test" в gitolite.conf:
 
 	$ nano ~/SITES/gitolite-admin/conf/gitolite.conf
-	# и добавляем в конце строчки
+		# добавляем в конце строки
 	repo test
     	RW+     =   USER
 
