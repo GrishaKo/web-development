@@ -1,14 +1,30 @@
+[toc]
+
 # Настройка SSH аутентификации по ключам для подключения к удаленному компьютеру
 
 [SSH](https://ru.wikipedia.org/wiki/SSH) - сетевой протокол для удаленного управления компьютером (сервером) с помощью командной строки (macOS/Linux/Windows).
 
 <!--ts-->
+  * [Ссылки](#ссылки)
+  * [Подключение к удаленному компьютеру по SSH на macOS и IOS](#подключение-к-удаленному-компьютеру-по-ssh-на-macos-и-ios)
+  * [Удаленный вход на macOS по SSH](#удаленный-вход-на-macos-по-ssh)
+  * [Настройка](#настройка)
+     * [Ссылки](#ссылки-1)
+     * [Создание SSH-ключей](#создание-ssh-ключей)
+     * [Передача публичного SSH-ключа на удаленный компьютер](#передача-публичного-ssh-ключа-на-удаленный-компьютер)
+     * [Конфигурация SSH-сервера на удаленном комьюетере](#конфигурация-ssh-сервера-на-удаленном-комьюетере)
+     * [Настройка алиаса для команды подключения к удаленному компьютеру по SSH](#настройка-алиаса-для-команды-подключения-к-удаленному-компьютеру-по-ssh)
+     * [Подключение к MySQL на удаленном компьютере через SSH туннель](#подключение-к-mysql-на-удаленном-компьютере-через-ssh-туннель)
+
+<!-- Added by: grisha_k, at:  -->
+
 <!--te-->
 
 ## Ссылки
 
 1. [Настройка доступа по ssh (обновленная версия)](https://www.youtube.com/watch?v=5bF-DTxvvmQ).
 2. [SSH ключи для работы с удаленными Git-репозиториями](https://www.youtube.com/watch?v=KqzVaUTCPbQ).
+3. [How to Access Your Mac over SSH with Remote Login](https://www.booleanworld.com/access-mac-ssh-remote-login/).
 
 ## Подключение к удаленному компьютеру по SSH на macOS и IOS
 
@@ -26,13 +42,13 @@
 > Если компьютер подключен к сети напрямую через сетевой кабель, то должен отображаться внешний IP адрес предоставленный провайдером, который можно использовать для удаленного подключения по SSH.
 > Если же компьютер подключен к Wi-Fi сети, то будет отображаться внутренний (локальный) IP адрес, поэтому будет необходимо настроить на роутере перенаправление 22 порта на компьютер по его локальному IP адресу.
 
----
-
-**Ссылки:**
-
-1. [How to Access Your Mac over SSH with Remote Login](https://www.booleanworld.com/access-mac-ssh-remote-login/) (как получить доступ к Mac через SSH с помощью удаленного входа).
-
 ## Настройка
+
+### Ссылки
+
+1. [Настройка SSH сервера во FreeBSD, конфигурационный файл sshd_config](http://vds-admin.ru/ssh/nastroika-servera-ssh-vo-freebsd-fail-sshdconfig).
+2. [Command Line SSH restart Mac OSX Mountain Lion](http://superuser.com/questions/478035/command-line-ssh-restart-mac-osx-mountain-lion).
+3. [Create an SSH Tunnel for MySQL Remote Access](https://www.linode.com/docs/databases/mysql/securely-administer-mysql-with-an-ssh-tunnel).
 
 ### Создание SSH-ключей
 
@@ -150,13 +166,6 @@
 	sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist
 	sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
----
-
-**Ссылки:**
-
-1. [Настройка SSH сервера во FreeBSD, конфигурационный файл sshd_config](http://vds-admin.ru/ssh/nastroika-servera-ssh-vo-freebsd-fail-sshdconfig).
-2. [Command Line SSH restart Mac OSX Mountain Lion](http://superuser.com/questions/478035/command-line-ssh-restart-mac-osx-mountain-lion).
-
 ### Настройка алиаса для команды подключения к удаленному компьютеру по SSH
 
 Вход по ssh на удаленную машину с помощью короткого имени (алиаса, например: ssh server) вместо полного адреса, ввода пароля и указания публичного ключа: 
@@ -195,10 +204,4 @@ IdentityFile - указываем путь публичного ключа.
 > 
 > 127.0.0.1:3307 - IP и порт на удаленном компьютере.
 > 
-> ssh_server - aлиас для подключения к серверу по SSH или полный путь ROOT@SERVER
-
----
-
-**Ссылки:**
-
-1. [Create an SSH Tunnel for MySQL Remote Access](https://www.linode.com/docs/databases/mysql/securely-administer-mysql-with-an-ssh-tunnel).
+> ssh_server - aлиас для подключения к серверу по SSH или полный путь ROOT@SERVER.

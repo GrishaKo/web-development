@@ -3,6 +3,12 @@
 [Composer](https://getcomposer.org/) - менеджер зависимостей для PHP.
 
 <!--ts-->
+  * [Установка Composer на macOS](#установка-composer-на-macos)
+  * [Ссылки](#ссылки)
+  * [Использование](#использование)
+
+<!-- Added by: grisha_k, at:  -->
+
 <!--te-->
 
 ## Установка Composer на macOS
