@@ -16,6 +16,7 @@
 Сначала устанавливаем [HomeBrew](HomeBrew.md), затем с его помощью устанавливаем Composer:
 
     $ brew install composer
+    $ composer --version
 
 Важно, что лучше чтобы сначала был установлен php через HomeBrew.
 

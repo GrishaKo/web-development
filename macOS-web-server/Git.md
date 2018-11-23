@@ -57,6 +57,7 @@
 Сначала устанавливаем [HomeBrew](HomeBrew.md), затем с его помощью устанавливаем Git:
 
 	$ brew install git
+	$ git --version
 
 ## Ссылки
 
