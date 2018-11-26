@@ -11,7 +11,7 @@
 
 ## Установка на macOS
 
-Сначала устанавливаем [HomeBrew](HomeBrew.md), затем с его помощью устанавливаем PHPUnit, при условии что PHP уже установлен, потому что [версия PHPUnit устанавливается в зависимости от версии PHP](https://phpunit.de/getting-started/phpunit-7.html):
+Сначала устанавливаем [HomeBrew](HomeBrew/readme.md), затем с его помощью устанавливаем PHPUnit, при условии что PHP уже установлен, потому что [версия PHPUnit устанавливается в зависимости от версии PHP](https://phpunit.de/getting-started/phpunit-7.html):
 
 	$ brew install phpunit
 	$ phpunit --version

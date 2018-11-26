@@ -11,6 +11,6 @@
 
 ## Установка на macOS
 
-Сначала устанавливаем [HomeBrew](HomeBrew.md), затем с его помощью устанавливаем PHPUnit, при условии что MySQL уже установлена:
+Сначала устанавливаем [HomeBrew](HomeBrew/readme.md), затем с его помощью устанавливаем PHPUnit, при условии что MySQL уже установлена:
 
 	$ brew install sphinx
