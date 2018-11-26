@@ -13,7 +13,7 @@
 
 ## Установка Composer на macOS
 
-Сначала устанавливаем [HomeBrew](/macOS-web-server/HomeBrew/readme.md), затем с его помощью устанавливаем Composer:
+Сначала устанавливаем [HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем Composer:
 
     $ brew install composer
     $ composer --version

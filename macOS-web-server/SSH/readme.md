@@ -27,7 +27,7 @@
 
 ## Подключение к удаленному компьютеру по SSH на macOS и IOS
 
-[MacOS Terminal](Terminal/readme.md) - встроенное приложение в macOS для работы с командной строкой.
+[MacOS Terminal](../Terminal/readme.md) - встроенное приложение в macOS для работы с командной строкой.
 
 [Termius - SSH client](https://www.termius.com) - кроссплатформенное приложение для мобильных, планшетов и компьютеров.
 
@@ -208,7 +208,7 @@ IdentityFile - указываем путь публичного ключа.
 
 ## Обмен файлами с удаленным компьютером Mac через Finder с помощью SFTP
 
-Сначала устанавливаем [HomeBrew](HomeBrew/readme.md), затем с его помощью устанавливаем [osxfuse](https://osxfuse.github.io/) и [sshfs](https://github.com/libfuse/sshfs):
+Сначала устанавливаем [HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем [osxfuse](https://osxfuse.github.io/) и [sshfs](https://github.com/libfuse/sshfs):
 
 	$ brew cask install osxfuse
 	$ brew install sshfs
