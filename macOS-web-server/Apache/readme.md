@@ -11,7 +11,7 @@
 
 ## Установка на macOS
 
-Сначала устанавливаем [HomeBrew](HomeBrew/readme.md), затем с его помощью устанавливаем Apache.
+Сначала устанавливаем [HomeBrew](/macOS-web-server/HomeBrew/readme.md), затем с его помощью устанавливаем Apache.
 
 Сразу следует установить пакеты [OpenLDAP](https://ru.wikipedia.org/wiki/OpenLDAP) и [libiconv](https://www.gnu.org/software/libiconv/):
 
