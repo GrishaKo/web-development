@@ -27,7 +27,7 @@
 
 ## Подключение к удаленному компьютеру по SSH на macOS и IOS
 
-[MacOS Terminal](https://support.apple.com/ru-ru/guide/terminal/welcome/mac) - встроенное приложение в macOS для работы с командной строкой.
+[MacOS Terminal](Terminal.md) - встроенное приложение в macOS для работы с командной строкой.
 
 [Termius - SSH client](https://www.termius.com) - кроссплатформенное приложение для мобильных, планшетов и компьютеров.
 
