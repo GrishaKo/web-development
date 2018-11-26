@@ -2,7 +2,7 @@
 
 > В процессе...
 
-1. [MacOS HomeBrew](/macOS-web-server/HomeBrew/readme.md).
+1. [MacOS HomeBrew](macOS-web-server/HomeBrew/readme.md).
 2. [Mojave-web-server](/macOS-web-server/Mojave-web-server.md) - Apache, PHP, MySQL & More.
 3. [Git](/macOS-web-server/Git/readme.md).
 4. [Composer](/macOS-web-server/Composer/readme.md).
