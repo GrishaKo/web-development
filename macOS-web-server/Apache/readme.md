@@ -8,12 +8,13 @@
 ## Ссылки
 
 1. [MacOS 10.14 Mojave Apache Setup: Multiple PHP Versions](https://getgrav.org/blog/macos-mojave-apache-multiple-php-versions).
+2. [Apache HTTP Server Version 2.4 Documentation](https://httpd.apache.org/docs/2.4/)
 
 ## Установка на macOS
 
 Сначала устанавливаем [HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем Apache.
 
-Сразу следует установить пакеты [OpenLDAP](https://ru.wikipedia.org/wiki/OpenLDAP) и [libiconv](https://www.gnu.org/software/libiconv/):
+Сразу следует установить библиотеки [OpenLDAP](https://ru.wikipedia.org/wiki/OpenLDAP) и [libiconv](https://www.gnu.org/software/libiconv/):
 
 	$ brew install openldap libiconv 
 
@@ -31,7 +32,7 @@
 
 	$ sudo brew services start httpd
 
-Теперь можно проверить работу Apache, открыв в браузере ссылку <http://localhost:8080> - должна отобразится страница с текстом "It works!".
+> Теперь можно проверить работу Apache, открыв в браузере ссылку <http://localhost:8080> - должна отобразится страница с текстом "It works!".
 
 В случае необходимости можно посмотреть журнал ошибок Apache:
 
@@ -47,13 +48,368 @@
 
 ## Конфигурация
 
-Основной файл конфигурации расположен в /usr/local/etc/httpd/httpd.conf.
+Глобальный файл конфигурации расположен в /usr/local/etc/httpd/httpd.conf, дополнительные в /usr/local/etc/httpd/extra.
 
-Открываем httpd.conf из командной строки, например, в редакторе TextEdit:
+Оригиналы всех конфигурационных файлов расположены в /usr/local/etc/httpd/original.
+
+#### Конфигурация httpd.conf
+
+Открыть httpd.conf можно из командной строки, например, в редакторе TextEdit:
 
 	$ open -a /Applications/TextEdit.app /usr/local/etc/httpd/httpd.conf
+		# или в терминальном редакторе nano
+		# $ nano /usr/local/etc/httpd/httpd.conf
 
-> Можно настроить [алиас в терминале](Terminal), для сокращенного использования команды "open -a /Applications/TextEdit.app".
+> Можно настроить [алиас в терминале](../Terminal/readme.md), для сокращенного использования команды "open -a /Applications/TextEdit.app".
+>
+> Следует учесть, что по умолчанию TextEdit заменяет программистские кавычки на "Smart кавычки", что можно изменить в настройках редактора.
 
+**Меняем прослушиваемый порт с 8080 на 80**, для этого находим строку:
 
+	Listen 8080
+
+И заменяем на:
+
+	Listen 80
 	
+> Теперь можно проверить работу Apache, открыв в браузере ссылку <http://localhost> (без добавления порта) - должна отобразится страница с текстом "It works!".
+
+**Включим mod_rewrite**, для этого раскомментируем строку, удалив в начале символ комментария "#":
+
+	LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so
+
+**Укажем текущее имя пользователя**, вместо your_user, в строке:
+
+	User your_user
+	Group staff
+
+> По умолчанию администратор macOS Mojave состоит в группе staff.
+> 
+> Для примера в приложении macOS Yosemite Server использовалось одинаковое имя пользователя и группы "_www", но из-за этого возникали сложности с правами доступа к файлам и каталогам, так как пользователь не был добавлен в системе.
+
+**Укажем глобальное имя хоста**, для этого находим строку:
+
+	ServerName www.example.com:8080
+	
+И заменяем на:
+
+	ServerName localhost
+
+> Если не указать имя хоста, будет использовать имя компьютера и об этом будет выводиться сообщение при перезагрузке Apache.
+
+**Уровень логов записываемых в [Errorlog](https://ru.wikipedia.org/wiki/Error.log) оставим по умолчанию**:
+
+	LogLevel warn
+
+> Уровень "предупреждения".
+
+Для применения всех изменений в конфигурационных файлах, всегда следует перезапускать Apache:
+
+	$ sudo apachectl -k restart
+
+#### Конфигурация виртуальных хостов
+
+**Добавим имя хоста в формат записи обращений к сайту в лог файл [CustomLog (access_log)](https://ru.wikipedia.org/wiki/Access.log),** для этого во-первых найдем строку:
+
+	LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+	
+И добавим сразу после нее новую строку:
+
+	LogFormat "%v %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combinedvhost
+
+Во-вторых найдем строку:
+
+	LogFormat "%h %l %u %t \"%r\" %>s %b" common
+
+И добавим сразу после нее новую строку:
+
+	LogFormat "%v %h %l %u %t \"%r\" %>s %b" commonvhost
+
+В-третьих найдем строку:
+
+	LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+
+И добавим сразу после нее новую строку:
+
+	LogFormat "%v %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinediovhost
+
+> Теперь мы сможем указывать свой формат записи в лог, например: 
+> 
+> CustomLog "/usr/local/var/log/httpd/access_log" combinedvhost
+
+Далее создадим каталог для конфигурационных файлов виртуальных хостов:
+
+	mkdir /usr/local/etc/httpd/extra/httpd-vhosts
+
+Теперь подключим этот каталог в конфигурационный файл, для этого находим строку:
+
+	#Include /usr/local/etc/httpd/extra/httpd-vhosts.conf
+
+И заменяем на:
+
+	Include /usr/local/etc/httpd/extra/httpd-vhosts/*.conf
+
+> Таким образом мы будем добавлять все виртуальные хосты не в один файл httpd-vhosts.conf, а каждый виртуальный хост в свой файл с расширением ".conf".
+
+Создадим конфигурационный файл виртуальных хостов по умолчанию (если для виртуального хоста не настроена отдельная конфигурация, он будет обрабатываться в конфигурации этого файла):
+
+	$ nano /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_80_.conf
+
+> Имена файлов могут быть любые, но для удобства использования каждый виртуальный хост для каждого порта записывается в отдельный файл. Сделано по примеру программы macOS Yosemite Server.
+>
+> 0000 - порядок сортировки добавляется для каждого файла одинаковый (на всякий случай), но в случае необходимости можно будет поменять на "0001" и т.д.
+> 
+> any - означает, что обрабатываются все запросы по 80 порту, что обозначено звездочкой в секции конфигурации виртуального хоста \<VirtualHost \*:80\>.
+> 
+> 80 - номер порта (или 443), который также указывается в секции виртуального хоста \<VirtualHost \*:80\>. 
+> 
+> Знак подчеркивание "_" - после которого, также будет указываться имя хоста (ServerName), для именованных хостов.
+			
+Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
+
+	<VirtualHost *:80>
+		ErrorLog "/Users/USER/Library/Logs/Homebrew/httpd/error_log"
+		CustomLog "/Users/USER/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+	
+		<Directory "/usr/local/var/www">
+			Require local
+		</Directory>
+	</VirtualHost>
+
+> \<VirtualHost *:80\>...\</VirtualHost\> - секция конфигурации виртуального хоста для всех запросов по 80 порту.
+>  
+> ErrorLog - изменим путь по умолчанию для лога ошибок, на путь до логов в домашней директории (/Users) текущего пользователя (например: USER) в каталоге /Homebrew/httpd, таким образом мы сможем видеть эти логи в приложении macOS Console.
+> 
+> CustomLog - изменим путь по умолчанию для лога записи обращений к сайту, на путь до логов в домашней директории текущего пользователя в каталоге /Homebrew/httpd, по той же причине, что и для ErrorLog. Формат записи логов также поменяем на созданный нами ранее "combinedvhost" (вместо стандартного common или combined), таким образом при условии, что в логе будет отображаться в начале указатель на имя хоста, т.е. домена (ServerName) и отдельного его поддоменов (ServerAlias), что удобно при просмотре логов, только по одному поддомену. Даже если мы будем записывать лог для каждого домена отдельный, все равно все поддомены будут записываться в этот лог, а если для каждого поддомена мы будем создавать отдельный конфигурационный файл - это будет неудобно, в случае когда поддомены создаются на сайте динамически, например, для каждого региона или языка.
+> 
+> \<Directory "/usr/local/var/www"\>...\</Directory\> - в общем файле конфигурации мы оставляем директорию по умолчанию, где будут размещаться публичные файлы сайта.
+> 
+> Require local - в данном случае мы указываем, что обращение к хостам по умолчанию, может быть только с локального компьютера (localhost, 127.0.0.1).
+
+Теперь создадим конфигурационный файл для виртуального хоста, например, site.localhost:
+
+	$ nano /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_80_site.localhost.conf
+
+> В отличие от конфигурационного файла по умолчанию, после нижнего подчеркивания мы добавили имя хоста (домена). Таким образом файл конфигурации по умолчанию для 80 порта будет всегда первым, при условии использования в начале имени файла всех хостов записи "0000_any_80_" (для в случае необходимости, будем менять порядок сортировки на 0001 и т.д.).
+	
+Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
+
+	<VirtualHost *:80>
+		DocumentRoot "/Users/USER/Sites/site"
+    
+		ServerName site.localhost
+		ServerAlias site.localhost *.site.localhost	
+		
+		ErrorLog "/Users/USER/Library/Logs/Homebrew/httpd/error_log"
+		CustomLog "/Users/USER/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+	
+		<Directory "/Users/USER/Sites/site">
+			Options -Indexes +FollowSymLinks
+			AllowOverride all
+			Require all granted
+		</Directory>
+	</VirtualHost>
+	
+> DocumentRoot - сначала мы добавим новый путь до корневого каталога c файлами сайта, где USER - имя текущего пользователя, а site - это каталог сайта, для которого не будем указывать ".localhost" (это только в случае с локальными хостами). Вообще правильно в каталоге сайта создавать отдельный публичный каталог и использовать его в качестве корневого, например, /Users/USER/Sites/site/public, где будет размещаться только статика (изображения, компилированные css и js файлы, публичные файлы) и один файл index.php, на который будут перенаправляться все запросы с помощью директив mode_rewrite настроенных в файле /Users/USER/Sites/site/public/.htaccess, а уже /Users/USER/Sites/site/public/index.php будет перенаправлять все запросы к не публичному каталогу сайта /Users/USER/Sites/site.
+>  
+> ServerName - укажем имя хоста, теперь все запросы к указанному домену (site.localhost) будут обрабатываться в этой конфигурации хоста.
+> 
+> ServerAlias - укажем алиасы, т.е. поддомены для текущего домена (www.site.localhost и все остальные).
+> 
+> \<Directory "/Users/USER/Sites/site"\>...\</Directory\> - в этой секции укажем настройки для корневого каталога:
+> 
+> - "Options -Indexes +FollowSymLinks" - запрещаем отображаться список файлов в каталоге, если не найден индексный файл, и разрешаем использовать символические ссылки. Мы использовали знаки мину и плюс, таким образом директива Options будет также наследовать все остальные опции указанные в httpd.conf (т.е. зная, что уже FollowSymLinks у нас разрешена, мы можем указать просто "Options -Indexes"), иначе мы бы указали "Options FollowSymLinks".
+> - AllowOverride all - разрешаем использовать все директивы в файле .htaccess в каталогах сайта.
+> - Require all granted - разрешаем доступ всем.
+
+Теперь создадим каталог для хостов (сайтов) в домашнем каталоге текущего пользователя и затем создадим каталог для нового хоста (сайта/домена):
+
+	$ mkdir ~/Sites
+	$ mkdir ~/Sites/site
+		# или
+		# cd ~/Sites
+		# mkdir site
+
+Перезапустим Apache:
+
+	$ sudo apachectl -k restart
+
+Теперь добавим тестовый индексный файл для каталога сайта site.localhost:
+
+	$ echo '<h1>Home page of the site</h1>' > ~/Sites/site/index.html
+
+И откроем в браузере <http://site.localhost>, мы должны увидеть надпись "Home page of the site".
+
+Домен первого уровня localhost и его поддомены \*.localhost зарезервированы в [IETF](https://en.wikipedia.org/wiki/.test) и не требуют дополнительной настройки в /ets/hosts в macOS Mojave. Но поддомены \*.localhost при этом работают в браузере Safari только при условии подключения к интернету (точно при подключении по Wi-Fi), без подключения к интернету поддомены не работают в Safari, но работают в браузере [Google Сhrome](https://www.google.com/chrome/).
+
+> Не стоит использовать домены *.dev, потому что корневой домен dev куплен Google и не работает по https в Chrome для локальных доменов. 
+
+В случае необходимости можно прописать нужные домены в /ets/hosts, например, добавив перенаправление site.localhost на локальный IP 127.0.0.1:
+
+	$ sudo nano /etc/hosts
+		# добавляем перенаправление для каждого поддомена с новой строки
+	127.0.0.1       site.localhost
+	127.0.0.1       www.site.localhost
+
+Теперь все хосты *.localhost для которых не добавлены конфигурационные файлы в /usr/local/etc/httpd/extra/httpd-vhosts, будут обрабатываться конфигурацией в файле 0000_any_80_.conf, т.е. будут доступны только локально и будут ссылаться на корневой каталог /usr/local/var/www. Таким образом можно будет открывать, например, <http://localhost> для проверки работы Apache, в случае если настроенный хост не открывается.
+
+### Локальное использование доменов *.test
+
+Также для локальной разработки зарезервированы домены  *.test, и чтобы не прописывать каждый домен в /ets/hosts, можно использовать [Dnsmasq](https://ru.wikipedia.org/wiki/Dnsmasq), использовав для установки HomeBrew:
+
+	$ brew install dnsmasq
+	
+Теперь необходимо настроить хосты *.test, для этого добавим запись в конфигурацию dnsmasq:
+
+	$ echo 'address=/.test/127.0.0.1' > /usr/local/etc/dnsmasq.conf
+	
+Теперь запустим домен dnsmasq:
+
+	$ sudo brew services start dnsmasq
+		# перезагрузка
+		# $ sudo brew services restart dnsmasq
+		# остановка
+		# $ sudo brew services stop dnsmasq
+
+И выполним последнюю настройку dnsmasq:
+
+	$ sudo mkdir -v /etc/resolver
+	$ sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+
+Но также как и с доменами *.localhost, в Safari не будет работать без подключения к интернету (пробовал множество решений, ничего не помогло пока).
+
+### Конфигурация SSL для работы хостов по протоколу https
+
+**Включим SSL**, для этого откроем и настроим httpd.conf:
+
+	$ code /usr/local/etc/httpd/httpd.conf
+		# или
+		# nano /usr/local/etc/httpd/httpd.conf
+
+> code - если команда добавлена [в алиас для терминала](#Конфигурация-httpd.conf).
+
+Затем раскомментируем 3 строки, удалив в начале символ комментария "#":
+
+	LoadModule socache_shmcb_module lib/httpd/modules/mod_socache_shmcb.so
+	
+	LoadModule ssl_module lib/httpd/modules/mod_ssl.so
+	
+	Include /usr/local/etc/httpd/extra/httpd-ssl.conf
+	
+Теперь открываем и настраиваем конфигурационный файл httpd-ssl.conf:
+
+	$ code /usr/local/etc/httpd/extra/httpd-ssl.conf
+	
+**Меняем прослушиваемый порт с 8443 на 443**, для этого находим строку:
+
+	Listen 8443
+
+И заменяем на:
+
+	Listen 443
+	
+Затем поменяем порт в секции VirtualHost, для этого находим строку:
+
+	<VirtualHost _default_:8443>
+
+И заменяем на:
+
+	<VirtualHost _default_:443>
+	
+И также **закомментируем ненужные нам сейчас директивы в файле httpd-ssl.conf**, добавив в начале символ комментария "#":
+
+	#DocumentRoot "/usr/local/var/www"
+	#ServerName www.example.com:8443
+	
+	#SSLCertificateFile "/usr/local/etc/httpd/server.crt"
+	
+	#SSLCertificateKeyFile "/usr/local/etc/httpd/server.key"
+
+**Теперь сохраним изменения и создадим конфигурационный файл виртуальных хостов по умолчанию на 443 порту** (если для виртуального хоста не настроена отдельная конфигурация, он будет обрабатываться в конфигурации этого файла):
+
+	$ nano /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_.conf
+	
+Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
+
+	<VirtualHost *:443>
+		ErrorLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/error_log"
+		CustomLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+	
+		SSLEngine on
+		SSLCertificateFile "/usr/local/etc/httpd/certificates/*.localhost.crt"
+		SSLCertificateKeyFile "/usr/local/etc/httpd/certificates/private/*.localhost.key"
+	
+		<Directory "/usr/local/var/www">
+			Require local
+		</Directory>
+	</VirtualHost>
+
+> SSLEngine on - включаем работу модуля mod_ssl.
+> 
+> SSLCertificateFile - директива для указания файла с данными сертификата в формате PEM.
+> 
+> SSLCertificateKeyFile - директива для указания файла закрытого (приватного) ключа сертификата, закодированного с помощью PEM.
+	
+**Теперь создадим конфигурационный файл для виртуального хоста site.localhost на 443 порту**:
+
+	$ nano /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site.localhost.conf
+	
+Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
+
+	<VirtualHost *:443>
+		DocumentRoot "/Users/grisha_k/Sites/site/public"
+    
+		ServerName site.localhost
+		ServerAlias site.localhost *.site.localhost
+    
+		ErrorLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/error_log"
+		CustomLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+    
+		SSLEngine on
+		SSLCertificateFile "/usr/local/etc/httpd/certificates/*.localhost.crt"
+		SSLCertificateKeyFile "/usr/local/etc/httpd/certificates/private/*.localhost.key"
+		
+		<Directory "/Users/grisha_k/Sites/site">
+			Options -Indexes +FollowSymLinks
+			AllowOverride all
+			Require all granted
+		</Directory>	
+	</VirtualHost>
+
+Создадим каталог для данных сертификатов и закрытых ключей:
+
+	$ mkdir /usr/local/etc/httpd/certificates
+	$ mkdir /usr/local/etc/httpd/certificates/private
+
+Изменим права доступа каталога .../certificates/private, чтобы доступ к нему имел только текущий пользователь компьютера
+
+	$ chmod 700 /usr/local/etc/httpd/certificates/private
+	
+Перезапустим Apache, только после того, когда будут созданы SSL сертификаты.
+
+### Создание SSL сертификата
+
+Создадим самоподписанный SSL сертификат:
+
+	$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/httpd/certificates/private/*.localhost.key -out /usr/local/etc/httpd/certificates/*.localhost.crt
+		# Заполним требуемые поля:
+	Country Name (2 letter code) []: RU
+	State or Province Name (full name) []:Moscow
+	Locality Name (eg, city) []:Moscow
+	Organization Name (eg, company) []:localhost
+	Organizational Unit Name (eg, section) []:IT
+	Common Name (eg, fully qualified host name) []:*.localhost
+	Email Address []:you@example.com
+
+> *.localhost - Wildcard SSL сертификат (для домена и поддоменов).
+		
+Запустим тест:
+
+	$ sudo apachectl configtest
+	Syntax OK
+
+Перезапустим Apache:
+
+	$ sudo apachectl -k restart
+
+Чтобы не подтверждать сертификат в браузере Safari при каждом входе на новый поддомен \*.locahost, откроем сертификат /usr/local/etc/httpd/certificates/*.localhost.crt в приложение "Связка ключей" (Keychain Access), затем перейдем в секцию "Доверять" (Trust) и выберем "Всегда доверять" (Always Trust) в поле "Параметры использования сертификата" (When using this certificate).

@@ -501,6 +501,8 @@
 Сделаем еще несколько изменений и очередной коммит:
 
 	$ > readme.md
+		# или
+		# cat > readme.md ''
 	$ git add .
 	$ echo -e "\nMaster" >> index.md
 	$ git commit -a -m 'update index'
