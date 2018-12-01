@@ -52,7 +52,12 @@
 
 Оригиналы всех конфигурационных файлов расположены в /usr/local/etc/httpd/original.
 
-#### Конфигурация httpd.conf
+### Ссылки
+
+1. [MacOS 10.14 Mojave Apache Setup: SSL](https://getgrav.org/blog/macos-mojave-apache-ssl).
+2. [Mozilla's Server Side TLS Guidelines](https://wiki.mozilla.org/Security/Server_Side_TLS).
+
+### Конфигурация httpd.conf
 
 Открыть httpd.conf можно из командной строки, например, в редакторе TextEdit:
 
@@ -107,7 +112,7 @@
 
 	$ sudo apachectl -k restart
 
-#### Конфигурация виртуальных хостов
+### Конфигурация виртуальных хостов
 
 **Добавим имя хоста в формат записи обращений к сайту в лог файл [CustomLog (access_log)](https://ru.wikipedia.org/wiki/Access.log),** для этого во-первых найдем строку:
 
@@ -320,10 +325,6 @@
 
 	#DocumentRoot "/usr/local/var/www"
 	#ServerName www.example.com:8443
-	
-	#SSLCertificateFile "/usr/local/etc/httpd/server.crt"
-	
-	#SSLCertificateKeyFile "/usr/local/etc/httpd/server.key"
 
 **Теперь сохраним изменения и создадим конфигурационный файл виртуальных хостов по умолчанию на 443 порту** (если для виртуального хоста не настроена отдельная конфигурация, он будет обрабатываться в конфигурации этого файла):
 
@@ -402,6 +403,11 @@
 	Email Address []:you@example.com
 
 > *.localhost - Wildcard SSL сертификат (для домена и поддоменов).
+
+Теперь создадим символические ссылки для файлов сертификата и закрытого ключа, указанных в соответствующих директивах SSLCertificateFile и SSLCertificateKeyFile в /usr/local/etc/httpd/extra/httpd-ssl.conf:
+
+	$ ln -s /usr/local/etc/httpd/certificates/*.localhost.crt /usr/local/etc/httpd/server.crt
+	$ ln -s /usr/local/etc/httpd/certificates/private/*.localhost.key /usr/local/etc/httpd/server.key
 		
 Запустим тест:
 
