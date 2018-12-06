@@ -55,7 +55,8 @@
 ### Ссылки
 
 1. [MacOS 10.14 Mojave Apache Setup: SSL](https://getgrav.org/blog/macos-mojave-apache-ssl).
-2. [Mozilla's Server Side TLS Guidelines](https://wiki.mozilla.org/Security/Server_Side_TLS).
+2. [Генерация CSR-запроса на Linux/MacOS](https://1cloud.ru/help/ssl/orderssllinux).
+3. [Mozilla's Server Side TLS Guidelines](https://wiki.mozilla.org/Security/Server_Side_TLS).
 
 ### Конфигурация httpd.conf
 
@@ -112,7 +113,7 @@
 
 	$ sudo apachectl -k restart
 
-### Конфигурация виртуальных хостов
+### Логирование
 
 **Добавим имя хоста в формат записи обращений к сайту в лог файл [CustomLog (access_log)](https://ru.wikipedia.org/wiki/Access.log),** для этого во-первых найдем строку:
 
@@ -120,7 +121,9 @@
 	
 И добавим сразу после нее новую строку:
 
-	LogFormat "%v %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combinedvhost
+	LogFormat "\"%v\" %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combinedvhost
+
+> "%v" - название хоста (в двойных кавычках), которое мы добавили в начале формата записи в лог файл, только этим значением данный формат отличается от "combined".
 
 Во-вторых найдем строку:
 
@@ -128,7 +131,7 @@
 
 И добавим сразу после нее новую строку:
 
-	LogFormat "%v %h %l %u %t \"%r\" %>s %b" commonvhost
+	LogFormat "\"%v\" %h %l %u %t \"%r\" %>s %b" commonvhost
 
 В-третьих найдем строку:
 
@@ -136,11 +139,20 @@
 
 И добавим сразу после нее новую строку:
 
-	LogFormat "%v %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinediovhost
+	LogFormat "\"%v\" %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinediovhost
 
 > Теперь мы сможем указывать свой формат записи в лог, например: 
 > 
 > CustomLog "/usr/local/var/log/httpd/access_log" combinedvhost
+> 
+> Таким образом мы можем не создавать отдельный файл логов, для каждого виртуального хоста, а записывать все в один лог.
+
+В macOS Console в списке логов нам доступен каталог в домашней директории пользователя ~/Library/Logs/Homebrew/httpd, поэтому создадим символическую ссылку на этот каталог в каталоге по умолчанию:
+
+	$ mv /usr/local/var/log/httpd /usr/local/var/log/httpd.bak
+	$ ln -s ~/Library/Logs/Homebrew/httpd /usr/local/var/log/httpd 
+
+### Конфигурация виртуальных хостов
 
 Далее создадим каталог для конфигурационных файлов виртуальных хостов:
 
@@ -156,7 +168,7 @@
 
 > Таким образом мы будем добавлять все виртуальные хосты не в один файл httpd-vhosts.conf, а каждый виртуальный хост в свой файл с расширением ".conf".
 
-Создадим конфигурационный файл виртуальных хостов по умолчанию (если для виртуального хоста не настроена отдельная конфигурация, он будет обрабатываться в конфигурации этого файла):
+**Создадим конфигурационный файл виртуальных хостов по умолчанию** (если для виртуального хоста не настроена отдельная конфигурация, он будет обрабатываться в конфигурации этого файла):
 
 	$ nano /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_80_.conf
 
@@ -173,8 +185,8 @@
 Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
 
 	<VirtualHost *:80>
-		ErrorLog "/Users/USER/Library/Logs/Homebrew/httpd/error_log"
-		CustomLog "/Users/USER/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+		ErrorLog "/usr/local/var/log/httpd/error_log"
+		CustomLog "/usr/local/var/log/httpd/access_log" combinedvhost
 	
 		<Directory "/usr/local/var/www">
 			Require local
@@ -183,15 +195,15 @@
 
 > \<VirtualHost *:80\>...\</VirtualHost\> - секция конфигурации виртуального хоста для всех запросов по 80 порту.
 >  
-> ErrorLog - изменим путь по умолчанию для лога ошибок, на путь до логов в домашней директории (/Users) текущего пользователя (например: USER) в каталоге /Homebrew/httpd, таким образом мы сможем видеть эти логи в приложении macOS Console.
+> ErrorLog - лог ошибок. Если путь совпадает с глобальной конфигурацией в httpd.conf, то его можно не указывать.
 > 
-> CustomLog - изменим путь по умолчанию для лога записи обращений к сайту, на путь до логов в домашней директории текущего пользователя в каталоге /Homebrew/httpd, по той же причине, что и для ErrorLog. Формат записи логов также поменяем на созданный нами ранее "combinedvhost" (вместо стандартного common или combined), таким образом при условии, что в логе будет отображаться в начале указатель на имя хоста, т.е. домена (ServerName) и отдельного его поддоменов (ServerAlias), что удобно при просмотре логов, только по одному поддомену. Даже если мы будем записывать лог для каждого домена отдельный, все равно все поддомены будут записываться в этот лог, а если для каждого поддомена мы будем создавать отдельный конфигурационный файл - это будет неудобно, в случае когда поддомены создаются на сайте динамически, например, для каждого региона или языка.
+> CustomLog - лог записи обращений к сайту. Если путь совпадает с глобальной конфигурацией в httpd.conf, то его можно не указывать. В данном случае мы поменяли формат записи в лога файл на "combinedvhost".
 > 
 > \<Directory "/usr/local/var/www"\>...\</Directory\> - в общем файле конфигурации мы оставляем директорию по умолчанию, где будут размещаться публичные файлы сайта.
 > 
 > Require local - в данном случае мы указываем, что обращение к хостам по умолчанию, может быть только с локального компьютера (localhost, 127.0.0.1).
 
-Теперь создадим конфигурационный файл для виртуального хоста, например, site.localhost:
+**Теперь создадим конфигурационный файл для виртуального хоста, например, site.localhost:**
 
 	$ nano /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_80_site.localhost.conf
 
@@ -200,40 +212,41 @@
 Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
 
 	<VirtualHost *:80>
-		DocumentRoot "/Users/USER/Sites/site"
+		DocumentRoot "/Users/$USER/Sites/site.localhost"
     
 		ServerName site.localhost
-		ServerAlias site.localhost *.site.localhost	
+		ServerAlias site.localhost *.site.localhost
 		
-		ErrorLog "/Users/USER/Library/Logs/Homebrew/httpd/error_log"
-		CustomLog "/Users/USER/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+		ErrorLog "/usr/local/var/log/httpd/error_log"
+		CustomLog "/usr/local/var/log/httpd/access_log" combinedvhost
 	
-		<Directory "/Users/USER/Sites/site">
+		<Directory "/Users/$USER/Sites/site.localhost">
 			Options -Indexes +FollowSymLinks
 			AllowOverride all
 			Require all granted
 		</Directory>
 	</VirtualHost>
 	
-> DocumentRoot - сначала мы добавим новый путь до корневого каталога c файлами сайта, где USER - имя текущего пользователя, а site - это каталог сайта, для которого не будем указывать ".localhost" (это только в случае с локальными хостами). Вообще правильно в каталоге сайта создавать отдельный публичный каталог и использовать его в качестве корневого, например, /Users/USER/Sites/site/public, где будет размещаться только статика (изображения, компилированные css и js файлы, публичные файлы) и один файл index.php, на который будут перенаправляться все запросы с помощью директив mode_rewrite настроенных в файле /Users/USER/Sites/site/public/.htaccess, а уже /Users/USER/Sites/site/public/index.php будет перенаправлять все запросы к не публичному каталогу сайта /Users/USER/Sites/site.
+> DocumentRoot - сначала мы добавим новый путь до корневого каталога c файлами сайта, где $USER - имя текущего пользователя, а site.localhost - это каталог сайта. Вообще правильно в каталоге сайта создавать отдельный публичный каталог и использовать его в качестве корневого, например, /Users/USER/Sites/site/public, где будет размещаться только статика (изображения, компилированные css и js файлы, публичные файлы) и один файл index.php, на который будут перенаправляться все запросы с помощью директив mode_rewrite настроенных в файле /Users/USER/Sites/site/public/.htaccess, а уже /Users/USER/Sites/site/public/index.php будет перенаправлять все запросы к не публичному каталогу сайта /Users/USER/Sites/site.
 >  
+> ErrorLog - лог ошибок можно также создавать отдельно для каждого виртуального хоста, например: "/usr/local/var/log/httpd/site.localhost.error_log".
+> 
+> CustomLog - лог записи обращений к сайту можно также создавать отдельно для каждого виртуального хоста, например: "/usr/local/var/log/httpd/site.localhost.access_log".
+> 
 > ServerName - укажем имя хоста, теперь все запросы к указанному домену (site.localhost) будут обрабатываться в этой конфигурации хоста.
 > 
 > ServerAlias - укажем алиасы, т.е. поддомены для текущего домена (www.site.localhost и все остальные).
 > 
 > \<Directory "/Users/USER/Sites/site"\>...\</Directory\> - в этой секции укажем настройки для корневого каталога:
 > 
-> - "Options -Indexes +FollowSymLinks" - запрещаем отображаться список файлов в каталоге, если не найден индексный файл, и разрешаем использовать символические ссылки. Мы использовали знаки мину и плюс, таким образом директива Options будет также наследовать все остальные опции указанные в httpd.conf (т.е. зная, что уже FollowSymLinks у нас разрешена, мы можем указать просто "Options -Indexes"), иначе мы бы указали "Options FollowSymLinks".
+> - "Options -Indexes +FollowSymLinks" - запрещаем отображать список файлов в каталоге, если не найден индексный файл, и разрешаем использовать символические ссылки. Мы использовали знаки мину и плюс, таким образом директива Options будет также наследовать все глобальные опции указанные в httpd.conf (т.е. зная, что уже FollowSymLinks у нас разрешена, мы можем указать просто "Options -Indexes"), иначе мы бы указали "Options FollowSymLinks".
 > - AllowOverride all - разрешаем использовать все директивы в файле .htaccess в каталогах сайта.
 > - Require all granted - разрешаем доступ всем.
 
 Теперь создадим каталог для хостов (сайтов) в домашнем каталоге текущего пользователя и затем создадим каталог для нового хоста (сайта/домена):
 
 	$ mkdir ~/Sites
-	$ mkdir ~/Sites/site
-		# или
-		# cd ~/Sites
-		# mkdir site
+	$ mkdir ~/Sites/site.localhost
 
 Перезапустим Apache:
 
@@ -241,7 +254,7 @@
 
 Теперь добавим тестовый индексный файл для каталога сайта site.localhost:
 
-	$ echo '<h1>Home page of the site</h1>' > ~/Sites/site/index.html
+	$ echo '<h1>Home page of the site</h1>' > ~/Sites/site.localhost/index.html
 
 И откроем в браузере <http://site.localhost>, мы должны увидеть надпись "Home page of the site".
 
@@ -268,7 +281,7 @@
 
 	$ echo 'address=/.test/127.0.0.1' > /usr/local/etc/dnsmasq.conf
 	
-Теперь запустим домен dnsmasq:
+Теперь запустим демон dnsmasq:
 
 	$ sudo brew services start dnsmasq
 		# перезагрузка
@@ -281,7 +294,7 @@
 	$ sudo mkdir -v /etc/resolver
 	$ sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
 
-Но также как и с доменами *.localhost, в Safari не будет работать без подключения к интернету (пробовал множество решений, ничего не помогло пока).
+Но также как и с доменами *.localhost, в Safari не будет работать без подключения к интернету (решения пока не нашел).
 
 ### Конфигурация SSL для работы хостов по протоколу https
 
@@ -333,8 +346,8 @@
 Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
 
 	<VirtualHost *:443>
-		ErrorLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/error_log"
-		CustomLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+		ErrorLog "/usr/local/var/log/httpd/error_log"
+		CustomLog "/usr/local/var/log/httpd/access_log" combinedvhost
 	
 		SSLEngine on
 		SSLCertificateFile "/usr/local/etc/httpd/certificates/*.localhost.crt"
@@ -358,31 +371,36 @@
 Добавим в конфигурационный файл необходимые записи, сохраним и выйдем:
 
 	<VirtualHost *:443>
-		DocumentRoot "/Users/grisha_k/Sites/site/public"
+		DocumentRoot "/Users/$USER/Sites/site.localhost"
     
 		ServerName site.localhost
 		ServerAlias site.localhost *.site.localhost
     
-		ErrorLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/error_log"
-		CustomLog "/Users/grisha_k/Library/Logs/Homebrew/httpd/access_log" combinedvhost
+		ErrorLog "/usr/local/var/log/httpd/error_log"
+		CustomLog "/usr/local/var/log/httpd/access_log" combinedvhost
     
 		SSLEngine on
 		SSLCertificateFile "/usr/local/etc/httpd/certificates/*.localhost.crt"
 		SSLCertificateKeyFile "/usr/local/etc/httpd/certificates/private/*.localhost.key"
 		
-		<Directory "/Users/grisha_k/Sites/site">
+		<Directory "/Users/$USER/Sites/site.localhost">
 			Options -Indexes +FollowSymLinks
 			AllowOverride all
 			Require all granted
 		</Directory>	
 	</VirtualHost>
+	
+При создании еще одного виртуального хоста, мы можем копировать конфигурацию для уже созданного хоста и заменять в ней название хоста, например:
 
-Создадим каталог для данных сертификатов и закрытых ключей:
+	$ cp /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site.localhost.conf /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site2.localhost.conf
+	$ perl -i -pe 's/site.localhost/site2.localhost/;' /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site2.localhost.conf
+
+**Создадим каталог для данных сертификатов и закрытых ключей:**
 
 	$ mkdir /usr/local/etc/httpd/certificates
 	$ mkdir /usr/local/etc/httpd/certificates/private
 
-Изменим права доступа каталога .../certificates/private, чтобы доступ к нему имел только текущий пользователь компьютера
+Изменим права доступа каталога .../certificates/private, чтобы доступ к нему имел только текущий пользователь компьютера:
 
 	$ chmod 700 /usr/local/etc/httpd/certificates/private
 	
@@ -418,4 +436,8 @@
 
 	$ sudo apachectl -k restart
 
-Чтобы не подтверждать сертификат в браузере Safari при каждом входе на новый поддомен \*.locahost, откроем сертификат /usr/local/etc/httpd/certificates/*.localhost.crt в приложение "Связка ключей" (Keychain Access), затем перейдем в секцию "Доверять" (Trust) и выберем "Всегда доверять" (Always Trust) в поле "Параметры использования сертификата" (When using this certificate).
+Чтобы не подтверждать сертификат в браузере Safari при каждом входе на новый поддомен \*.localhost:
+
+1. Откроем сертификат /usr/local/etc/httpd/certificates/*.localhost.crt в приложение "Связка ключей" (Keychain Access).
+2. Затем перейдем в секцию "Доверять" (Trust).
+3. И выберем "Всегда доверять" (Always Trust) в поле "Параметры использования сертификата" (When using this certificate).
