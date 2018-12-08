@@ -57,8 +57,11 @@
 	A challenge password []:
 
 > "Organizational Unit Name" - всегда можно указывать IT или IT department, т.е. для ИТ отдела организации.
+> 
 > "Common Name" - для [Wildcard-сертификата](https://ru.wikipedia.org/wiki/Wildcard-сертификат) необходимо указывать "*.example.com".
+> 
 > "Email Address" - необязательное поле, но рекомендуется указать тот же e-mail, что будет использован для подтверждения владения доменом (часто это admin@).
+> 
 > "A challenge password" - оставим пустым, нажав Enter.
 
 Или без использования интерактивного режима можно сразу указать все необходимые данные:
