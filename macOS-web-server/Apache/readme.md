@@ -3,16 +3,16 @@
 [Apache HTTP-сервер](https://ru.wikipedia.org/wiki/Apache_HTTP_Server) — свободный веб-сервер. 
 
 <!--ts-->
-  * [Ссылки](#ссылки)
-  * [Установка на macOS](#установка-на-macos)
-  * [Конфигурация](#конфигурация)
-     * [Ссылки](#ссылки-1)
-     * [Конфигурация httpd.conf](#конфигурация-httpdconf)
-     * [Логирование](#логирование)
-     * [Конфигурация виртуальных хостов](#конфигурация-виртуальных-хостов)
-     * [Локальное использование домена test](#локальное-использование-домена-test)
-     * [Конфигурация SSL для работы хостов по протоколу https](#конфигурация-ssl-для-работы-хостов-по-протоколу-https)
-     * [Создание SSL сертификата](#создание-ssl-сертификата)
+   * [Заметки по использованию HTTP-сервера Apache](#заметки-по-использованию-http-сервера-apache)
+      * [Ссылки](#ссылки)
+      * [Установка на macOS](#установка-на-macos)
+      * [Конфигурация](#конфигурация)
+         * [Ссылки](#ссылки-1)
+         * [Конфигурация httpd.conf](#конфигурация-httpdconf)
+         * [Логирование](#логирование)
+         * [Конфигурация виртуальных хостов](#конфигурация-виртуальных-хостов)
+         * [Локальное использование домена test](#локальное-использование-домена-test)
+         * [Конфигурация SSL/TLS для работы виртуальных хостов по протоколу HTTPS](#конфигурация-ssltls-для-работы-виртуальных-хостов-по-протоколу-https)
 
 <!-- Added by: grisha_k, at:  -->
 
@@ -309,9 +309,11 @@
 
 Но также как и с доменами *.localhost, в Safari не будет работать без подключения к интернету (решения пока не нашел).
 
-### Конфигурация SSL для работы хостов по протоколу https
+### Конфигурация SSL/TLS для работы виртуальных хостов по протоколу HTTPS
 
-**Включим SSL**, для этого откроем и настроим httpd.conf:
+[HTTPS](https://ru.wikipedia.org/wiki/HTTPS) (HyperText Transfer Protocol Secure) — расширение протокола HTTP для поддержки шифрования в целях повышения безопасности.
+
+**Включим SSL/TLS**, для этого откроем и настроим httpd.conf:
 
 	$ code /usr/local/etc/httpd/httpd.conf
 		# или
@@ -371,7 +373,7 @@
 		</Directory>
 	</VirtualHost>
 
-> SSLEngine on - включаем работу модуля mod_ssl.
+> SSLEngine on - включаем SSL/TLS для виртуального хоста.
 > 
 > SSLCertificateFile - директива для указания файла с данными сертификата в формате PEM.
 > 
@@ -403,39 +405,31 @@
 		</Directory>	
 	</VirtualHost>
 	
-При создании еще одного виртуального хоста, мы можем копировать конфигурацию для уже созданного хоста и заменять в ней название хоста, например:
+При создании еще одного виртуального хоста, мы можем копировать конфигурацию для уже созданного хоста и заменить в ней название хоста, например:
 
 	$ cp /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site.localhost.conf /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site2.localhost.conf
 	$ perl -i -pe 's/site.localhost/site2.localhost/;' /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site2.localhost.conf
+		# И например, можем сразу поменять домен localhost на test, тем самым изменив и путь до сертификата
+	$ perl -i -pe 's/localhost/test/;' /usr/local/etc/httpd/extra/httpd-vhosts/0000_any_443_site2.localhost.conf
 
 **Создадим каталог для данных сертификатов и закрытых ключей:**
 
 	$ mkdir /usr/local/etc/httpd/certificates
+	$ mkdir /usr/local/etc/httpd/certificates/private
+	
+**Создадим каталог для сертификатов, запросов сертификатов и приватных ключей**:
+
+	$ mkdir /usr/local/etc/httpd/certificates
+	$ mkdir /usr/local/etc/httpd/certificates/csr
 	$ mkdir /usr/local/etc/httpd/certificates/private
 
 Изменим права доступа каталога .../certificates/private, чтобы доступ к нему имел только текущий пользователь компьютера:
 
 	$ chmod 700 /usr/local/etc/httpd/certificates/private
 	
-Перезапустим Apache, только после того, когда будут созданы SSL сертификаты.
+**Теперь необходимо [создать самоподписанный сертификат для локального использования](../SSL/readme.md#генерация-самоподписанного-ssltls-сертификата-для-локального-использования).**
 
-### Создание SSL сертификата
-
-Создадим самоподписанный SSL сертификат:
-
-	$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/httpd/certificates/private/*.localhost.key -out /usr/local/etc/httpd/certificates/*.localhost.crt
-		# Заполним требуемые поля:
-	Country Name (2 letter code) []: RU
-	State or Province Name (full name) []:Moscow
-	Locality Name (eg, city) []:Moscow
-	Organization Name (eg, company) []:localhost
-	Organizational Unit Name (eg, section) []:IT
-	Common Name (eg, fully qualified host name) []:*.localhost
-	Email Address []:you@example.com
-
-> *.localhost - Wildcard SSL сертификат (для домена и поддоменов).
-
-Теперь создадим символические ссылки для файлов сертификата и закрытого ключа, указанных в соответствующих директивах SSLCertificateFile и SSLCertificateKeyFile в /usr/local/etc/httpd/extra/httpd-ssl.conf:
+Затем создадим символические ссылки для файлов сертификата и закрытого ключа, указанных в соответствующих директивах SSLCertificateFile и SSLCertificateKeyFile в /usr/local/etc/httpd/extra/httpd-ssl.conf:
 
 	$ ln -s /usr/local/etc/httpd/certificates/*.localhost.crt /usr/local/etc/httpd/server.crt
 	$ ln -s /usr/local/etc/httpd/certificates/private/*.localhost.key /usr/local/etc/httpd/server.key
@@ -449,8 +443,4 @@
 
 	$ sudo apachectl -k restart
 
-Чтобы не подтверждать сертификат в браузере Safari при каждом входе на новый поддомен \*.localhost:
-
-1. Откроем сертификат /usr/local/etc/httpd/certificates/*.localhost.crt в приложение "Связка ключей" (Keychain Access).
-2. Затем перейдем в секцию "Доверять" (Trust).
-3. И выберем "Всегда доверять" (Always Trust) в поле "Параметры использования сертификата" (When using this certificate).
+И откроем в браузере <https://site.localhost>, мы должны увидеть надпись "Home page of the site".
