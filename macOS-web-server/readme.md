@@ -15,4 +15,3 @@
 * [Git](Git/readme.md).
 * [PHPUnit](PHPUnit/readme.md).
 * [Sphinx](Sphinx/readme.md).
-* Laravel.
