@@ -115,6 +115,17 @@
 
 > Если не указать имя хоста, будет использовать имя компьютера и об этом будет выводиться сообщение при перезагрузке Apache.
 
+**Для включения вывода отчета о состоянии сервера Apache в браузере** только для локальных хостов, необходимо добавить в конце файла httpd.conf следующие строки:
+
+	# Enabling Status Support
+	# https://httpd.apache.org/docs/2.4/mod/mod_status.html
+	<Location "/server-status">
+	    SetHandler server-status
+	    Require local
+	</Location>
+
+> Теперь, для просмотра состояния сервера Apache следует открыть страницу <http://localhost/server-status> или <http://your.server.name/server-status?auto>.
+
 Для применения всех изменений в конфигурационных файлах, всегда следует перезапускать Apache:
 
 	$ sudo apachectl -k restart
