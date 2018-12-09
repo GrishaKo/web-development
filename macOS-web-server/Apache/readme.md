@@ -124,7 +124,7 @@
 	    Require local
 	</Location>
 
-> Теперь, для просмотра состояния сервера Apache следует открыть страницу <http://localhost/server-status> или <http://your.server.name/server-status?auto>.
+> Теперь, для просмотра состояния сервера Apache следует открыть страницу <http://localhost/server-status> или <http://localhost/server-status?auto>.
 
 Для применения всех изменений в конфигурационных файлах, всегда следует перезапускать Apache:
 
