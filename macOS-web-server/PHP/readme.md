@@ -27,6 +27,8 @@
 
 	$ brew install php@5.6
 	$ brew install php@7.2
+
+> PHP будет установлено в /usr/local/Cellar/php@5.6 и /usr/local/Cellar/php@7.2. При этом у меня при первой установке PHP 7.2 было установлено в /usr/local/Cellar/php - это соответсвенно вызывало некоторые ошибки и приходилось создавать символическую ссылку Cellar/php@7.2 на Cellar/php. Поэтому в итоге я удалил все версии PHP и заново их установил.
 	
 После установки мы должны создать необходимые символические ссылки на нужную версию PHP (например, 5.6), в том числе /usr/local/bin/php:
 
@@ -86,7 +88,6 @@
 Сохраняем изменения, перезапустив Apache:
 
 	$ sudo apachectl -k restart
-	$ sudo apachectl start
 	
 Теперь мы можем проверить, какую точно версию PHP использует Apache, для этого в одном из каталогов виртуальных хостов создадим следующий файл:
 
@@ -95,6 +96,8 @@
 > /usr/local/var/www - путь до корневой директории виртуального хоста localhost.
 
 И можем открыть в браузере страницу виртуального хоста <https://localhost/info.php>, в результате увидим вывод команды phpinfo().
+
+> При первой установке PHP, для версии 5.6 у меня не работал вывод phpinfo(), помогло только удаление файла /usr/local/etc/php/5.6/conf.d/ext-opcache.ini. Поэтому в итоге я удалил все версии PHP и заново их установил.
 
 Для переключения версии PHP, используемой Apache, можно закомментировать одно подключение модуля "LoadModule php7_module ... libphp7.so" и раскомментировать другое подключение "LoadModule php5_module ... libphp5.so", либо установить [PHP Switcher Script](https://gist.github.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2):
 
@@ -128,6 +131,8 @@
 
 	$ sphp 5.6
 	$ pecl install xdebug-2.5.5
+
+> Расширение будет установлено в /usr/local/lib/php/pecl.
 	
 Теперь удалим или закомментируем строку (отключим расширение) zend_extension="xdebug.so" в /usr/local/etc/php/5.6/php.ini, добавленную PECL:
 
@@ -148,7 +153,7 @@
 
 	$ sudo apachectl -k restart
 
-Откроем в браузере страницу виртуального хоста <https://localhost/info.php> и посмотрим, что phpinfo() есть информация о подключенном Xdebug.
+Откроем в браузере страницу виртуального хоста <https://localhost/info.php> и посмотрим, что в phpinfo() есть информация о подключенном Xdebug.
 
 Можем установить переключатель "[Xdebug Toggler for OSX](https://github.com/w00fz/xdebug-osx)":
 
@@ -160,9 +165,9 @@
 	$ xdebug on
 	$ xdebug off
 
-> Файл "/usr/local/etc/php/5.6/conf.d/ext-xdebug.ini" переименовывается в ".../ext-xdebug.ini.disabled".
+> Отключение происходит простым переименованием файла "/usr/local/etc/php/5.6/conf.d/ext-xdebug.ini" в ".../ext-xdebug.ini.disabled" и наоборот.
 
-Теперь мы можем переключиться на другую версию php и переустановить расширение Xdebug для другой версии php:
+Теперь мы можем переключиться на другую версию php и установить расширение Xdebug для другой версии php:
 
 	$ sphp 7.2
 	$ pecl uninstall -r xdebug
