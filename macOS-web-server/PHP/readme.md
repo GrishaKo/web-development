@@ -21,9 +21,9 @@
 
 Сначала устанавливаем [HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем [Apache](../Apache/readme.md) и после - PHP.
 
-Если PHP был уже установлен в /usr/local/Homebrew/php, то нужно [удалить старые пакеты PHP и очистить настройки](../HomeBrew/readme.md#Удаление-пакетов).
+Предварительно нужно [удалить старые версии пакеты PHP и очистить настройки](../HomeBrew/readme.md#Удаление-пакетов), если пакеты PHP назывались по другому (php56 вместо php@5.6 и т.д.).
 
-Теперь можем установить несколько версий PHP в /usr/local/Homebrew/core: 
+Теперь можем установить несколько версий PHP в /usr/local/Cellar: 
 
 	$ brew install php@5.6
 	$ brew install php@7.2
