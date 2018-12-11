@@ -3,14 +3,20 @@
 [Homebrew](https://brew.sh) - недостающий менеджер пакетов для macOS.
 
 <!--ts-->
+  * [Ссылки](#Ссылки)
   * [Почему я перешел на Homebrew](#почему-я-перешел-на-homebrew)
   * [Установка Homebrew](#установка-homebrew)
   * [Установка пакетов](#установка-пакетов)
   * [Обновление](#обновление)
+  * [Удаление пакетов](#Удаление-пакетов)
 
 <!-- Added by: grisha_k, at:  -->
 
 <!--te-->
+
+## Ссылки
+
+1. [MacOS 10.14 Mojave Apache Setup: Upgrading Homebrew](https://getgrav.org/blog/macos-mojave-apache-upgrade-homebrew).
 
 ## Почему я перешел на Homebrew
 
@@ -90,3 +96,22 @@
 Или только конкретный пакет, например:
 
     $ brew upgrade git
+
+По умолчанию Homebrew не удаляет старые версии пакетов, чтобы удалить их, выполним команду:
+
+	$ brew cleanup
+
+## Удаление пакетов
+
+Перед удаление пакетов нужно выполнить обновление.
+
+Затем, например, мы хотим удалить старые версии пакетов Homebrew/php, чтобы перейти на новый вариант установки в Hombrew/core, для этого можем еще раз проверить установленные версии пакетов и удалить их:
+
+	$ brew list | grep php
+	$ brew uninstall --force php56 php56-apcu php56-opcache php56-xdebug php56-yaml
+	$ brew cleanup
+	$ brew list | grep php
+	
+Теперь мы можем очистить старые параметры конфигурации для PHP:
+
+	$ rm -Rf /usr/local/etc/php/*
