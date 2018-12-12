@@ -38,20 +38,19 @@
 Создадим приватный ключ и [CSR](https://en.wikipedia.org/wiki/Certificate_signing_request), с помощью [OpenSSL](https://ru.wikipedia.org/wiki/OpenSSL) и заполним в интерактивном режиме требуемые поля:
 	
 	$ openssl req -nodes -newkey rsa:2048 -keyout /usr/local/etc/httpd/certificates/private/example.com.key -out usr/local/etc/httpd/certificates/csr/example.com.csr
-	Country Name (2 letter code) []: RU
-	State or Province Name (full name) []:Moscow
-	Locality Name (eg, city) []:Moscow
-	Organization Name (eg, company) []:example.com
-	Organizational Unit Name (eg, section) []:IT
-	Common Name (eg, fully qualified host name) []:example.com
-	Email Address []:admin@example.com
-	A challenge password []:
 
-> "Organizational Unit Name" - всегда можно указывать IT или IT department, т.е. для ИТ отдела организации.
+> "Country Name (2 letter code) []: RU" - Аббревиатура названия страны из 2-х букв.
 > 
-> "Common Name" - для [Wildcard-сертификата](https://ru.wikipedia.org/wiki/Wildcard-сертификат) необходимо указывать "*.example.com".
+> "State or Province Name (full name) []: Moscow" - Название штата или провинции.
 > 
-> "Email Address" - необязательное поле, но рекомендуется указать тот же e-mail, который будет использован для подтверждения владения доменом (часто это admin@).
+> "Locality Name (eg, city) []: Moscow" - Населенный пункт (город).
+> "Organization Name (eg, company) []: example.com" - Название организации (можно сайт).
+> 
+> "Organizational Unit Name (eg, section) []: IT" - всегда можно указывать IT или IT department, т.е. для ИТ отдела организации.
+> 
+> "Common Name (eg, fully qualified host name) []: example.com" - домен, для [Wildcard-сертификата](https://ru.wikipedia.org/wiki/Wildcard-сертификат) необходимо указывать "*.example.com".
+> 
+> "Email Address []: admin@example.com" - необязательное поле, но рекомендуется указать тот же e-mail, который будет использован для подтверждения владения доменом (часто это admin@).
 > 
 > "A challenge password" - оставим пустым, нажав Enter.
 
