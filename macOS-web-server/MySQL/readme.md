@@ -1,10 +1,24 @@
-[toc]
-
 # Заметки по использованию MySQL
 
 [MariaDB](https://ru.wikipedia.org/wiki/MariaDB) — ответвление от реляционной системы управления базами данных [MySQL](https://ru.wikipedia.org/wiki/MySQL).
 
 <!--ts-->
+  * [Ссылки](#ссылки)
+  * [Установка на macOS](#установка-на-macos)
+  * [Инструменты](#инструменты)
+     * [Утилиты командной строки](#утилиты-командной-строки)
+        * [mysql - Встроенный клиент командной строки MySQL](#mysql---встроенный-клиент-командной-строки-mysql)
+        * [mysqladmin - Встроенный клиент для администрирования сервера MySQL](#mysqladmin---встроенный-клиент-для-администрирования-сервера-mysql)
+        * [innotop - Утилита для мониторинга сервера MySQL в реальном времени](#innotop---утилита-для-мониторинга-сервера-mysql-в-реальном-времени)
+        * [Percona Toolkit - Набор инструментов командной строки](#percona-toolkit---набор-инструментов-командной-строки)
+     * [Интерфейсы](#интерфейсы)
+        * [Sequel Pro - приложение на macOS для администрирования БД](#sequel-pro---приложение-на-macos-для-администрирования-бд)
+        * [PhpMyAdmin - PHP-приложение для администрирования и мониторинга БД в браузере](#phpmyadmin---php-приложение-для-администрирования-и-мониторинга-бд-в-браузере)
+        * [MySQL Workbench - приложение для визуального проектирования и администрирования БД](#mysql-workbench---приложение-для-визуального-проектирования-и-администрирования-бд)
+  * [Конфигурация](#конфигурация)
+
+<!-- Added by: grisha_k, at:  -->
+
 <!--te-->
 
 ## Ссылки
@@ -208,8 +222,8 @@
 
 ## Конфигурация
 
-sysctl -n hw.ncpu
+<https://tools.percona.com/wizard>
 
-https://tools.percona.com/wizard
+<http://qaru.site/questions/24764/how-to-discover-number-of-logical-cores-on-mac-os-x>
 
-https://mariadb.com/kb/en/library/mariadb-vs-mysql-compatibility/
+<https://mariadb.com/kb/en/library/mariadb-vs-mysql-compatibility/>
