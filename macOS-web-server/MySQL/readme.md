@@ -286,8 +286,8 @@
 
 	$ nano /usr/local/etc/my.cnf.d/server.cnf
 		# или создаем файл и открываем в другом текстовом редакторе
-	$ > /usr/local/etc/my.cnf.d/server.cnf
-	$ code /usr/local/etc/my.cnf.d/server.cnf
+		# $ > /usr/local/etc/my.cnf.d/server.cnf
+		# $ code /usr/local/etc/my.cnf.d/server.cnf
 
 > В данном примере команда code - это [алиас для команды терминала](../Terminal/readme.md#Добавление-алиасов-для-команд-терминала), которая открывает файл в указанном текстовом редакторе.
 > 
