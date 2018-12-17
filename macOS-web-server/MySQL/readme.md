@@ -154,7 +154,7 @@
 
 	$ mysqladmin -u root -p processlist
 	
-> Эквивалентно `SHOW PROCESSLIST`. С ключем "--verbose", эквивалентно `SHOW FULL PROCESSLIST`.
+> Эквивалентно `SHOW PROCESSLIST`. С ключем `--verbose`, эквивалентно `SHOW FULL PROCESSLIST`.
 
 Убить процесс:
 	
