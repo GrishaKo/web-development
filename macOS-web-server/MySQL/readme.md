@@ -399,7 +399,7 @@
 		# или посчитать размер файлов на диске
 		# $ du -sch `find /usr/local/mysql/ -name "*.MYI"`
 
-После изменения значения переменной `key_buffer_size` нужно оценить эффективность изменений спустя 24 часа. Для оценки производительности чтения буфера ключей можно вычислить соотношение переменных состояния "`Key_reads` / `Key_read_requests`", которое обычно должно быть меньше 0,01 (в идеале не больше 0,001). Для более полной оценки эффективности значения переменной `key_buffer_size` можно воспользоваться следующими рекомендациями:
+После изменения значения переменной `key_buffer_size` нужно оценить эффективность изменений спустя 24 часа. Для оценки производительности чтения буфера ключей можно вычислить соотношение переменных состояния `Key_reads / Key_read_requests`, которое обычно должно быть меньше 0,01 (в идеале не больше 0,001). Для более полной оценки эффективности значения переменной `key_buffer_size` можно воспользоваться следующими рекомендациями:
 
 1. [MySQL - Check the performance of the key buffer](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_key_buffer_size).
 2. [MariaDB - Optimizing key-buffer-size](https://mariadb.com/kb/en/library/optimizing-key_buffer_size/).
@@ -426,7 +426,7 @@
 	table_open_cache               = 2048
 	table_definition_cache         = 1024
 
-> `tmp-table-size`, `max-heap-table-size` - Максимальный размер временных таблиц в памяти, в зависимости от того, какой из этих параметров меньше. Для таблиц MEMORY ограничением является только значение `max-heap-table-size`. Чем меньше временных таблиц создается на диске, тем лучше, что можно проанализировать, вычислив какой процент составляют временные таблицы на диске от всех временных таблиц, используя переменные состояния: `Created_tmp_disk_tables` / (`Created_tmp_disk_tables` + `Created_tmp_tables`) * 100 (подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/5.7/en/internal-temporary-tables.html) и [MariaDB](https://mariadb.com/kb/en/library/server-system-variables/#tmp_table_size)). 
+> `tmp-table-size`, `max-heap-table-size` - Максимальный размер временных таблиц в памяти, в зависимости от того, какой из этих параметров меньше. Для таблиц MEMORY ограничением является только значение `max-heap-table-size`. Чем меньше временных таблиц создается на диске, тем лучше, что можно проанализировать, вычислив какой процент составляют временные таблицы на диске от всех временных таблиц, используя переменные состояния: `Created_tmp_disk_tables / (Created_tmp_disk_tables + Created_tmp_tables) * 100` (подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/5.7/en/internal-temporary-tables.html) и [MariaDB](https://mariadb.com/kb/en/library/server-system-variables/#tmp_table_size)). 
 > 
 > `query_cache_type`, `query_cache_size` - отключаем кеширование MySQL, так как на нашем сервере будет очень часто происходить добавление/обновление записей в БД, что приведет к частому сбрасыванию кэша и в результате высокой нагрузки на сервер. При этом если для `query_cache_type` указать значение 2, то в таком случае кэш будет применяться только к тем запросам, для которых принудительно указано в самом запросе о необходимости кэширования "[SELECT SQL_CACHE](https://dev.mysql.com/doc/refman/5.7/en/query-cache-in-select.html)".
 >  
