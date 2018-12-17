@@ -291,7 +291,7 @@
 
 > В данном примере команда code - это [алиас для команды терминала](../Terminal/readme.md#Добавление-алиасов-для-команд-терминала), которая открывает файл в указанном текстовом редакторе.
 > 
-> Имя server.cnf выбрано исходя из книги "[Red Hat Enterprise Linux Troubleshooting Guide (Chapter 3: Troubleshooting a Web Application / Finding the MariaDB Folder)](https://books.google.ru/books?id=kQCACwAAQBAJ&lpg=PA83&dq=mariadb%20catalog%20my.cnf.d&hl=ru&pg=PA82#v=onepage&q=mariadb%20catalog%20my.cnf.d&f=false)".
+> Имя `server.cnf` выбрано исходя из книги "[Red Hat Enterprise Linux Troubleshooting Guide (Chapter 3: Troubleshooting a Web Application / Finding the MariaDB Folder)](https://books.google.ru/books?id=kQCACwAAQBAJ&lpg=PA83&dq=mariadb%20catalog%20my.cnf.d&hl=ru&pg=PA82#v=onepage&q=mariadb%20catalog%20my.cnf.d&f=false)".
 
 Для стартовой конфигурации MySQL воспользуемся онлайн-инструментом "[Percona Tools for MySQL](https://tools.percona.com/wizard)" и далее будем настраивать под себя, используя также другие профессиональные рекомендации:
 
