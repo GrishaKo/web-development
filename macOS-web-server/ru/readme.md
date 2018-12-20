@@ -1,7 +1,5 @@
 # Заметки по веб-серверу macOS
 
-> В процессе...
-
 * [MacOS Terminal](Terminal/readme.md).
 * [SSH](SSH/readme.md).
 * [Time-Machine](TimeMachine/readme.md).
