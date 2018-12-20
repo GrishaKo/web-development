@@ -1,6 +1,6 @@
 # Заметки по использованию macOS Time Machine
 
-[Time Machine](https://support.apple.com/ru-ru/HT201250) - встроенное macOS средство резервного копирования.
+[Time Machine](https://support.apple.com/en-us/HT201250) (ENG/[RUS](https://support.apple.com/ru-ru/HT201250)) - встроенное macOS средство резервного копирования.
 
 <!--ts-->
   * [Подключение сетевого диска для резервных копий Time Machine](#подключение-сетевого-диска-для-резервных-копий-time-machine)
