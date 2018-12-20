@@ -494,7 +494,7 @@
 
 **Для определения необходимости изменения `thread_cache_size`** следует посмотреть значения переменной статуса `Threads_created`, которое должно быть равно или чуть больше `Threads_cached`, если разница большая, то следует стремится к уменьшению разницы, для это необходимо увеличить значение `thread_cache_size`, установив его равным значению `Threads_connected` или чуть больше чем максимальное количество одновременных соединений с момента старта сервера, отображаемое в переменной статуса `Max_used_connections`:
 
-	SHOW GLOBAL STATUS WHERE variable_name LIKE 'Threads%' OR variable_name LIKE 'Max_used_connections';
+	mysql> SHOW GLOBAL STATUS WHERE variable_name LIKE 'Threads%' OR variable_name LIKE 'Max_used_connections';
 	+----------------------+-------+
 	| Variable_name        | Value |
 	+----------------------+-------+
