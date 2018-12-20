@@ -310,7 +310,7 @@
 		# $ > /usr/local/etc/my.cnf.d/server.cnf
 		# $ code /usr/local/etc/my.cnf.d/server.cnf
 
-> В данном примере команда `code` - это [../#алиас для команды терминала](../Terminal/readme.md#alias)), которая открывает файл в указанном текстовом редакторе.
+> В данном примере команда `code` - это [../#алиас для команды терминала](../Terminal/readme.md#alias), которая открывает файл в указанном текстовом редакторе.
 > 
 > Имя `server.cnf` выбрано исходя из книги "[Red Hat Enterprise Linux Troubleshooting Guide (Chapter 3: Troubleshooting a Web Application / Finding the MariaDB Folder)](https://books.google.ru/books?id=kQCACwAAQBAJ&lpg=PA83&dq=mariadb%20catalog%20my.cnf.d&hl=ru&pg=PA82#v=onepage&q=mariadb%20catalog%20my.cnf.d&f=false)" (ENG).
 
