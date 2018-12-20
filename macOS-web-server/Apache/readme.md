@@ -60,6 +60,7 @@
 
 >  Опция "-k" перезапускает Apache немедленно.
 
+<a id="configuration"></a>
 ## Конфигурация
 
 Глобальный файл конфигурации расположен в /usr/local/etc/httpd/httpd.conf, дополнительные в /usr/local/etc/httpd/extra.
