@@ -540,5 +540,5 @@
 
 1. [MySQL - Optimizing InnoDB Disk I/O](https://dev.mysql.com/doc/refman/5.7/en/optimizing-innodb-diskio.html) (ENG).
 2. [17 Key MySQL Config File Settings (MySQL 5.7 proof)](http://www.speedemy.com/17-key-mysql-config-file-settings-mysql-5-7-proof/) (ENG).
-3. [Percona - How to Choose the MySQL innodb_log_file_size](https://www.percona.com/blog/2017/10/18/chose-mysql-innodb_log_file_size/) (ENG).
-4. [Расчет и изменение размера redo-log InnoDB (innodb_log_file_size)](https://blog.programs74.ru/how-to-change-innodb_log_file_size-safely/#) (RUS).
+3. [Percona - How to Choose the MySQL innodb-log-file-size](https://www.percona.com/blog/2017/10/18/chose-mysql-innodb_log_file_size/) (ENG).
+4. [Расчет и изменение размера redo-log InnoDB (innodb-log-file-size)](https://blog.programs74.ru/how-to-change-innodb_log_file_size-safely/#) (RUS).
