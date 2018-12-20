@@ -1,3 +1,3 @@
-# Заметки по веб-разработке
+# Web Development Notes
 
-1. [Заметки по веб-серверу macOS](macOS-web-server).
+1. [In Russian](ru).
