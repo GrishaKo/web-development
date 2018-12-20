@@ -17,6 +17,11 @@
         * [PhpMyAdmin - PHP-приложение для администрирования и мониторинга БД в браузере](#phpmyadmin---php-приложение-для-администрирования-и-мониторинга-бд-в-браузере)
         * [MySQL Workbench - приложение для визуального проектирования и администрирования БД](#mysql-workbench---приложение-для-визуального-проектирования-и-администрирования-бд)
   * [Конфигурация](#конфигурация)
+     * [Общая конфигурация](#общая-конфигурация)
+     * [Конфигурация логирования](#конфигурация-логирования)
+     * [Конфигурация MyISAM](#конфигурация-myisam)
+     * [Конфигурация кэша и лимитов](#конфигурация-кэша-и-лимитов)
+     * [Конфигурация InnoDB](#конфигурация-innodb)
 
 <!-- Added by: grisha_k, at:  -->
 
@@ -324,16 +329,17 @@
 
 Значения по умолчанию в конфигурации [MySQL](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html) (ENG) и, например, [MariaDB](https://mariadb.com/kb/en/library/server-system-variables/) (ENG) отличаются, следует ознакомиться со значениями по умолчанию для изменяемых параметров и рекомендациями по их изменению.
 
-**Базовая настройка для секции [client]:**
+<a id="general-configuration"></a>
+### Общая конфигурация
+
+**Секция `[client]` - настройки для [#утилит командной строки](#clients):**
 
 	[client]
 
 	socket                         = /usr/local/var/	mysql/mysql.sock
 	port                           = 3306
 
-> `[client]` - настройки для [#утилит командной строки](#clients).
-
-**Базовые настройки:**
+**Секция `[mysqld]` - настройки для демона MySQL, все последующие настройки будут относится к этой секции:**
 
 	[mysqld]
 
@@ -360,7 +366,8 @@
 > 
 > `default_storage_engine` - указываем механизм хранения данных, который будет использоваться по умолчанию.
 
-**Настройка логирования:**
+<a id="logging-configuration"></a>
+### Конфигурация логирования
 
 	# LOGGING
 	
@@ -385,7 +392,7 @@
 > 
 > `sync_binlog` - выключаем синхронизацию бинарного лога на диск сервером MySQL, для улучшения производительности, при этом потери данных возможны только в момент сбоя питания или операционной системы, подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_sync_binlog) (ENG) и [MariaDB](https://mariadb.com/kb/en/library/replication-and-binary-log-system-variables/#sync_binlog) (ENG).
 
-Лог медленных запросов по умолчанию выключен `slow_query_log = 0`, управлять им лучше динамические (без перезагрузки MySQL), например, сначала делаем копию текущего лога и затем очищаем его:
+**Лог медленных запросов по умолчанию выключен `slow_query_log = 0`, управлять им лучше динамические (без перезагрузки MySQL),** например, сначала делаем копию текущего лога и затем очищаем его:
 
 	$ cp /usr/local/var/mysql/mysql-slow.log /usr/local/var/mysql/mysql-slow-$(date +%Y-%m-%d).log
 	$ cp /dev/null /usr/local/var/mysql/mysql-slow.log
@@ -410,11 +417,12 @@
 	mysql> set global slow_query_log = 1;
 	mysql> set global long_query_time = 0;
 
-В приложении macOS Console в списке логов нам доступен каталог в домашней директории пользователя `~/Library/Logs/Homebrew/mariadb` (или mysql), поэтому создадим в этом каталоге жесткую ссылку на лог-файл ошибок в каталоге по умолчанию: 
+**В приложении macOS Console в списке логов нам доступен каталог в домашней директории пользователя `~/Library/Logs/Homebrew/mariadb` (или mysql),** поэтому создадим в этом каталоге жесткую ссылку на лог-файл ошибок в каталоге по умолчанию: 
 
 	$ ln /usr/local/var/mysql/mysql-error.log ~/Library/Logs/Homebrew/mariadb/mysql-error.log
-	
-**Настройка для MyISAM:**
+
+<a id="myisam-configuration"></a>	
+### Конфигурация MyISAM
 
 	# MyISAM
 	
@@ -426,7 +434,7 @@
 > 
 > `myisam_recover_options` - параметр автоматического восстановление таблиц после сбоя. `BACKUP` - означает делать резервную копию файла .MYD (таблицы MyISAM) перед восстановлением. `FORCE` - означает запуск восстановление, даже если мы потеряем более одной строки из файла .MYD (подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_myisam-recover-options) и [MariaDB](https://mariadb.com/kb/en/library/myisam-system-variables/#myisam_recover_options)).
 
-Размер `key_buffer_size` не стоит выставлять больше чем размер всех MYI-файлов, что можно подсчитать командой:
+**Размер `key_buffer_size`** не стоит выставлять больше чем размер всех MYI-файлов, что можно подсчитать командой:
 
 	$ mysql -u root -p
 	mysql> SELECT SUM(INDEX_LENGTH)/1024/1024 FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM';
@@ -446,7 +454,8 @@
 
 > Подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_key_buffer_size) (ENG) и [MariaDB](https://mariadb.com/kb/en/library/optimizing-key_buffer_size/) (ENG).
 
-**Кеш и лимиты:**
+<a id="сache-and-limit-configuration"></a>
+### Конфигурация кэша и лимитов
 
 	# CACHE AND LIMITS
 	
@@ -483,7 +492,7 @@
 > 
 > `table_open_cache`, `table_definition_cache` - переменные служат для конфигурации кэша открытых таблиц и кэша определений таблиц из которых состоит кэш таблиц, подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/5.7/en/table-cache.html) (ENG) и [MariaDB](https://mariadb.com/kb/en/library/optimizing-table_open_cache/) (ENG). 
 
-Для определения в необходимости установки `thread_cache_size` следует посмотреть значения переменной статуса `Threads_created`, которое должно быть равно или чуть больше `Threads_cached`, если разница большая, то следует стремится к уменьшению разницы, для это необходимо увеличить значение `thread_cache_size`, установив его равным значению `Threads_connected` или чуть больше чем максимальное количество одновременных соединений с момента старта сервера, отображаемое в переменной статуса `Max_used_connections`:
+**Для определения необходимости изменения `thread_cache_size`** следует посмотреть значения переменной статуса `Threads_created`, которое должно быть равно или чуть больше `Threads_cached`, если разница большая, то следует стремится к уменьшению разницы, для это необходимо увеличить значение `thread_cache_size`, установив его равным значению `Threads_connected` или чуть больше чем максимальное количество одновременных соединений с момента старта сервера, отображаемое в переменной статуса `Max_used_connections`:
 
 	SHOW GLOBAL STATUS WHERE variable_name LIKE 'Threads%' OR variable_name LIKE 'Max_used_connections';
 	+----------------------+-------+
@@ -501,7 +510,8 @@
 1. [MySQL/MariaDB: тюнинг производительности #1: thread-cache-size](https://rtfm.co.ua/mysqlmariadb-tyuning-proizvoditelnosti-1-thread_cache_size/) (ENG).
 2. [MySQL Optimization Tip - thread-cache-size](http://anothermysqldba.blogspot.com/2013/09/mysql-optimization-tip-threadcachesize.html) (ENG).
 
-**Настройка для InnoDB:**
+<a id="innodb-configuration"></a>
+### Конфигурация InnoDB
 
 	# INNODB
 	
