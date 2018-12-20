@@ -6,26 +6,26 @@
   * [Установка Composer на macOS](#установка-composer-на-macos)
   * [Ссылки](#ссылки)
   * [Использование](#использование)
-
-<!-- Added by: grisha_k, at:  -->
-
 <!--te-->
 
+<a id="links"></a>
+## Ссылки
+
+1. [Composer Cheat Sheet for developers](http://composer.json.jolicode.com) (ENG).
+2. [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/) (RUS).
+3. [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15) (RUS).
+
+<a id="installation"></a>
 ## Установка Composer на macOS
 
-Сначала устанавливаем [HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем Composer:
+Сначала устанавливаем [../HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем Composer:
 
     $ brew install composer
     $ composer --version
 
 Важно, что лучше чтобы сначала был установлен php через HomeBrew.
 
-## Ссылки
-
-1. [Разберёмся с Composer](https://modzone.ru/blog/2016/12/02/understanding-composer/).
-2. [Composer Cheat Sheet for developers](http://composer.json.jolicode.com).
-3. [Composer: Всё о .lock файле](https://phpprofi.ru/blogs/post/15).
-
+<a id="using"></a>
 ## Использование
 
 [Packagist](https://packagist.org) - репозиторий пакетов PHP.

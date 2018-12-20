@@ -22,9 +22,6 @@
      * [Конфигурация MyISAM](#конфигурация-myisam)
      * [Конфигурация кэша и лимитов](#конфигурация-кэша-и-лимитов)
      * [Конфигурация InnoDB](#конфигурация-innodb)
-
-<!-- Added by: grisha_k, at:  -->
-
 <!--te-->
 
 <a id="links"></a>
@@ -392,12 +389,11 @@
 > 
 > `sync_binlog` - выключаем синхронизацию бинарного лога на диск сервером MySQL, для улучшения производительности, при этом потери данных возможны только в момент сбоя питания или операционной системы, подробнее в документации [MySQL](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_sync_binlog) (ENG) и [MariaDB](https://mariadb.com/kb/en/library/replication-and-binary-log-system-variables/#sync_binlog) (ENG).
 
-**Лог медленных запросов по умолчанию выключен `slow_query_log = 0`, управлять им лучше динамические (без перезагрузки MySQL),** например, сначала делаем копию текущего лога и затем очищаем его:
+**Лог медленных запросов по умолчанию выключен `slow_query_log = 0`, управлять им лучше динамические (без перезагрузки MySQL),** например, сначала делаем копию текущего лога (переименовываем):
 
-	$ cp /usr/local/var/mysql/mysql-slow.log /usr/local/var/mysql/mysql-slow-$(date +%Y-%m-%d).log
-	$ cp /dev/null /usr/local/var/mysql/mysql-slow.log
+	$ mv /usr/local/var/mysql/mysql-slow.log /usr/local/var/mysql/mysql-slow-$(date +%Y-%m-%d_%H:%I:%S).log
 
-> Конечно можно просто переименовать лог, используя команду `md` вместо `cp`, и тогда не нужно очищать текущий лог `cp /dev/null ...`, в таком случае после включения лога будет создан новый лог файл, но чтобы исключить возможные проблемы с правами доступа при создании нового файла, просто очищаем текущий лог файл, подробнее в документации "[MySQL. Server Log Maintenance](https://dev.mysql.com/doc/refman/5.7/en/log-file-maintenance.html)" (ENG).
+> Подробнее в документации "[MySQL. Server Log Maintenance](https://dev.mysql.com/doc/refman/5.7/en/log-file-maintenance.html)" (ENG).
 
 Затем мы можем включить лог медленных запросов `slow_query_log = 1` и изменить время выполнения запроса `long_query_time = 5` (по умолчанию 10 секунд), чтобы записывать в лог все запросы превышающие указанный лимит, но предварительно мы должны еще сбросить лог медленных запросов `FLUSH SLOW LOGS`:
 

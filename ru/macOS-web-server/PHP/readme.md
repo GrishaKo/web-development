@@ -1,6 +1,6 @@
 # Заметки по использованию PHP
 
-[PHP](https://ru.wikipedia.org/wiki/PHP) - скриптовый язык общего назначения, интенсивно применяемый для разработки веб-приложений.
+[PHP](https://en.wikipedia.org/wiki/PHP) (ENG/[RUS](https://ru.wikipedia.org/wiki/PHP)) - скриптовый язык общего назначения, интенсивно применяемый для разработки веб-приложений.
 
 <!--ts-->
   * [Ссылки](#ссылки)
@@ -8,30 +8,29 @@
   * [Конфигурация Apache](#конфигурация-apache)
   * [Установка расширений для PHP на macOS](#установка-расширений-для-php-на-macos)
   * [Заметки по использованию MySQL >>](../MySQL/readme.md)
-
-<!-- Added by: grisha_k, at:  -->
-
 <!--te-->
 
+<a id="links"></a>
 ## Ссылки
 
-1. [MacOS 10.14 Mojave Apache Setup: Multiple PHP Versions](https://getgrav.org/blog/macos-mojave-apache-multiple-php-versions).
-2. [MacOS 10.14 Mojave Apache Setup: MySQL, APC & More...](https://getgrav.org/blog/macos-mojave-apache-mysql-vhost-apc).
+1. [MacOS 10.14 Mojave Apache Setup: Multiple PHP Versions](https://getgrav.org/blog/macos-mojave-apache-multiple-php-versions) (ENG).
+2. [MacOS 10.14 Mojave Apache Setup: MySQL, APC & More...](https://getgrav.org/blog/macos-mojave-apache-mysql-vhost-apc) (ENG).
 
+<a id="installation"></a>
 ## Установка на macOS
 
-Сначала устанавливаем [HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем [Apache](../Apache/readme.md) (если не предусмотрено иное) и после - PHP.
+Сначала устанавливаем [../HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем [../Apache](../Apache/readme.md) и после - PHP.
 
-Предварительно нужно [удалить старые версии пакетов PHP и очистить настройки](../HomeBrew/readme.md#Удаление-пакетов), если пакеты PHP назывались по другому (php56 вместо php@5.6 и т.д.).
+Предварительно нужно [../#удалить старые версии пакетов PHP и очистить настройки](../HomeBrew/readme.md#uninstall-packages), если пакеты PHP назывались по другому (php56 вместо php@5.6 и т.д.).
 
-Теперь можем установить несколько версий PHP в /usr/local/Cellar: 
+Теперь можем установить несколько версий PHP в `/usr/local/Cellar`: 
 
 	$ brew install php@5.6
 	$ brew install php@7.2
 
-> PHP будет установлено в /usr/local/Cellar/php@5.6 и /usr/local/Cellar/php@7.2. При этом у меня при первой установке PHP 7.2 было установлено в /usr/local/Cellar/php - это соответсвенно вызывало некоторые ошибки и приходилось создавать символическую ссылку Cellar/php@7.2 на Cellar/php. Поэтому в итоге я удалил все версии PHP и заново их установил.
+> PHP будет установлено в `/usr/local/Cellar/php@5.6 и /usr/local/Cellar/php@7.2`. При этом у меня при первой установке PHP 7.2 было установлено в `/usr/local/Cellar/php/7.2` - это вызывало ошибки при использовании пакета sphp и приходилось создавать символическую ссылку `Cellar/php@7.2` на `Cellar/php`. Поэтому в итоге я удалил все версии PHP и заново их установил, но затем при установке друго пакета, произошло автоматическое обновление пакетов `brew upgrade` и в итоге был установлен php@7.3 в `Cellar/php/7.3`, поэтому возможно этот пакет PHP придется переустановить, когда я начну его использовать.
 	
-После установки мы должны создать необходимые символические ссылки на нужную версию PHP (например, 5.6), в том числе /usr/local/bin/php:
+После установки мы должны создать необходимые символические ссылки на нужную версию PHP (например, 5.6), в том числе `/usr/local/bin/php`:
 
 	$ brew link --force --overwrite php@5.6
 	$ php -v
@@ -55,9 +54,10 @@
 		# $ nano /usr/local/etc/php/5.6/php.ini
 		# $ nano /usr/local/etc/php/7.2/php.ini
 
+<a id="apache-configuration"></a>
 ## Конфигурация Apache
 
-[Откроем конфигурационный файл Apache](../Apache/readme.md#конфигурация-httpdconf), например, с помощью терминального редактора nano:
+[../#Откроем конфигурационный файл Apache](../Apache/readme.md#httpd-configuration), например, с помощью терминального редактора nano:
 
 	$ nano /usr/local/etc/httpd/httpd.conf
 
@@ -94,18 +94,18 @@
 
 	$ echo "<?php phpinfo();" > /usr/local/var/www/info.php
 	
-> /usr/local/var/www - путь до корневой директории виртуального хоста localhost.
+> `/usr/local/var/www` - путь до корневой директории виртуального хоста `localhost`.
 
 И можем открыть в браузере страницу виртуального хоста <https://localhost/info.php>, в результате увидим вывод команды phpinfo().
 
-> При первой установке PHP, для версии 5.6 у меня не работал вывод phpinfo(), помогло только удаление файла /usr/local/etc/php/5.6/conf.d/ext-opcache.ini. Поэтому в итоге я удалил все версии PHP и заново их установил.
+> При первой установке PHP, для версии 5.6 у меня не работал вывод phpinfo(), помогло только удаление файла `/usr/local/etc/php/5.6/conf.d/ext-opcache.ini`. Поэтому в итоге я удалил все версии PHP и заново их установил.
 
-Для переключения версии PHP, используемой Apache, можно закомментировать одно подключение модуля "LoadModule php7_module ... libphp7.so" и раскомментировать другое подключение "LoadModule php5_module ... libphp5.so", либо установить [PHP Switcher Script](https://gist.github.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2):
+Для переключения версии PHP, используемой Apache, можно закомментировать одно подключение модуля `LoadModule php7_module ... libphp7.so` и раскомментировать другое подключение `LoadModule php5_module ... libphp5.so`, либо установить [PHP Switcher Script](https://gist.github.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2):
 
 	$ curl -L https://gist.githubusercontent.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2/raw > /usr/local/bin/sphp
 	$ chmod +x /usr/local/bin/sphp
 
-Затем необходимо добавить /usr/local/sbin в $PATH:
+Затем необходимо добавить `/usr/local/sbin` в `$PATH`:
 	
 	$ sudo nano ~/.bash_profile
 		# вставляем строку
@@ -125,7 +125,8 @@
 Посмотреть более детальную информацию о конкретной версии PHP можно командой:
 
 	$ brew info php@7.2
-	
+
+<a id="php-extensions"></a>
 ## Установка расширений для PHP на macOS
 
 Установим расширение [Xdebug](https://ru.wikipedia.org/wiki/Xdebug), сначала для PHP 5.6:
@@ -133,9 +134,9 @@
 	$ sphp 5.6
 	$ pecl install xdebug-2.5.5
 
-> Расширение будет установлено в /usr/local/lib/php/pecl.
+> Расширение будет установлено в `/usr/local/lib/php/pecl`.
 	
-Теперь удалим или закомментируем строку (отключим расширение) zend_extension="xdebug.so" в /usr/local/etc/php/5.6/php.ini, добавленную PECL:
+Теперь удалим или закомментируем строку (отключим расширение) `zend_extension="xdebug.so"` в `/usr/local/etc/php/5.6/php.ini`, добавленную PECL:
 
 	$ perl -i -pe 's/zend_extension="xdebug.so"/;zend_extension="xdebug.so"/;' /usr/local/etc/php/5.6/php.ini
 
@@ -166,7 +167,7 @@
 	$ xdebug on
 	$ xdebug off
 
-> Отключение происходит простым переименованием файла "/usr/local/etc/php/5.6/conf.d/ext-xdebug.ini" в ".../ext-xdebug.ini.disabled" и наоборот.
+> Отключение происходит простым переименованием файла `/usr/local/etc/php/5.6/conf.d/ext-xdebug.ini` в `.../ext-xdebug.ini.disabled` и наоборот.
 
 Теперь мы можем переключиться на другую версию php и установить расширение Xdebug для другой версии php:
 
@@ -192,7 +193,7 @@
 	$ pecl uninstall -r yaml && pecl install yaml
 	$ sudo apachectl -k restart
 
-Также как и для Xdebug, мы можем перенести подключение Yaml из php.ini в conf.d/ext-yaml.ini:
+Также как и для Xdebug, мы можем перенести подключение Yaml из `php.ini` в `conf.d/ext-yaml.ini`:
 
 	[yaml]
 	extension="yaml.so"
