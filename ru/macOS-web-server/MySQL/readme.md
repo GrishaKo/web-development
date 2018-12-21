@@ -494,10 +494,10 @@
 	+----------------------+-------+
 	| Variable_name        | Value |
 	+----------------------+-------+
-	| Max_used_connections | 20    |
-	| Threads_cached       | 19    |
+	| Max_used_connections | 50    |
+	| Threads_cached       | 49    |
 	| Threads_connected    | 1     |
-	| Threads_created      | 20    |
+	| Threads_created      | 50    |
 	| Threads_running      | 1     |
 	+----------------------+-------+
 
