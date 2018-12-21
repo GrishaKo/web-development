@@ -1,3 +1,3 @@
-# Web Development Notes
+# Web development notes
 
 1. [In Russian](ru).
