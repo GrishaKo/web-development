@@ -1,10 +1,11 @@
 # Заметки по веб-серверу macOS
 
-* [MacOS Terminal](Terminal/readme.md).
+* [Terminal](Terminal/readme.md).
 * [SSH](SSH/readme.md).
+* [File Sharing](FileSharing/readme.md).
 * [Time-Machine](TimeMachine/readme.md).
 * [Cron](Cron/readme.md).
-* [MacOS HomeBrew](HomeBrew/readme.md).
+* [HomeBrew](HomeBrew/readme.md).
 * [Apache](Apache/readme.md).
 * [SSL](SSL/readme.md).
 * [PHP](PHP/readme.md).
