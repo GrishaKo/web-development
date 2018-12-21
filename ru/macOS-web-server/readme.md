@@ -1,4 +1,4 @@
-# Заметки по веб-серверу macOS
+# Заметки по веб-серверу на macOS
 
 * [Terminal](Terminal/readme.md).
 * [SSH](SSH/readme.md).
