@@ -151,7 +151,7 @@ Postfix уже установлен на macOS:
 
 	$ echo "Message" | mail -s "Subject" to@domain.tld
 
-> to@domain.tld - e-mail получателя.
+> `to@domain.tld` - e-mail получателя.
 
 В macOS Mojave для просмотра логов отправляемых писем, необходимо использоваться команды терминала, потому что логи не сохраняются в /var/log/mail.log:
 
