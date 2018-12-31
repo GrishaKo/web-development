@@ -36,6 +36,7 @@ Postfix уже установлен на macOS:
 <a id="configuration"></a>	
 ## Конфигурация отправки почты через сервер почтового сервиса
 
+<a id="mail-configuration"></a>
 ### Конфигурация почтового сервиса в качестве SMTP ретранслятора
 
 Для организации электронной почты для домена, проще использовать почтовый сервис, например: [Yandex](https://yandex.ru/support/pdd/), [Google](https://support.google.com/a#topic=2426592) или [Zoho](https://www.zoho.com/mail/help/).
@@ -82,6 +83,7 @@ Postfix уже установлен на macOS:
 - [Протестируйте Ваши письма на СПАМ](https://www.mail-tester.com/) (ENG/[RUS](https://www.mail-tester.com/?lang=ru)).
 - [Authentication Checker](https://port25.com/authentication-checker/) (ENG).
 
+<a id="postfix-configuration"></a>
 ### Конфигурация Postfix для использования почтового сервиса в качестве SMTP ретранслятора
 
 Все электронные письма будем отправлять через SMTP-сервер одного e-mail аккаунта домента `no-reply@domain.tld` (где `domain.tld` нужно заменить на свой домен), данный e-mail будет добавляться в заголовок письма `Return-Path` (адрес на который приходят уведомления об ошибках и не доставленные письма), но в заголовке `From` будет указываться e-mail отправителя (например, при отправке через PHP функцией `mail('to@domain.tld', 'Subject', 'Form:order@domain.tld')`).
