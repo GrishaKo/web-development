@@ -509,7 +509,7 @@
 **В macOS Mojave для значение параметра `open_files_limit` установлено ограничение `10032`,** поэтому что бы увеличить это ограничение, его необходимо изменить в операционной системе, подробнее:
 
 1. [Maximum limits](https://wilsonmar.github.io/maximum-limits/) (ENG). 
-2. [How to Change Open Files Limit on OS X and macOS] (https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c) (ENG). 
+2. [How to Change Open Files Limit on OS X and macOS](https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c) (ENG). 
 
 <a id="innodb-configuration"></a>
 ### Конфигурация InnoDB
