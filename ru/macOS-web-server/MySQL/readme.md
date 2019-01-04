@@ -467,7 +467,7 @@
 	
 	thread_cache_size              = 50
 	
-	open_files_limit               = 65535
+	open_files_limit               = 10032
 	
 	table_open_cache               = 4096
 	table_definition_cache         = 4096
@@ -505,6 +505,11 @@
 
 1. [MySQL/MariaDB: тюнинг производительности #1: thread-cache-size](https://rtfm.co.ua/mysqlmariadb-tyuning-proizvoditelnosti-1-thread_cache_size/) (ENG).
 2. [MySQL Optimization Tip - thread-cache-size](http://anothermysqldba.blogspot.com/2013/09/mysql-optimization-tip-threadcachesize.html) (ENG).
+
+**В macOS Mojave для значение параметра `open_files_limit` установлено ограничение 10032,** поэтому что бы увеличить это значение, его необходимо изменить в операционной системе, подробнее:
+
+1. [Maximum limits](https://wilsonmar.github.io/maximum-limits/) (ENG). 
+2. [How to Change Open Files Limit on OS X and macOS] (https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c) (ENG). 
 
 <a id="innodb-configuration"></a>
 ### Конфигурация InnoDB
