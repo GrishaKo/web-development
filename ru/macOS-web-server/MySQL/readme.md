@@ -122,6 +122,18 @@
 Вывести информацию о состоянии механизма хранения InnoDB:
 
 	mysql> SHOW ENGINE INNODB STATUS\G
+
+Для каждой базы данных рекомендуется создавать отдельных пользователей, с ограниченными правами, например:
+
+	mysql> GRANT ALL PRIVILEGES ON db_name.* TO 'user_name'@'localhost' IDENTIFIED BY 'password';
+
+> `db_name` - название базы данных.
+> 
+> `user_name` - имя пользователя.
+> 
+> `localhost` - хост.
+> 
+> `password` - пароль.
 	
 Подбробнее в документации [MySQL](https://dev.mysql.com/doc/refman/5.7/en/mysql.html) (ENG) и [MariaDB](https://mariadb.com/kb/en/library/mysql-command-line-client/) (ENG).
 
