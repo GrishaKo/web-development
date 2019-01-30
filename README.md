@@ -1,3 +1,3 @@
 # Web development notes
 
-1. [In Russian](ru).
+1. [In Russian](ru/readme.md).

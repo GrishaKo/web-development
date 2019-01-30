@@ -24,7 +24,7 @@
 <a id="packages"></a>
 ## Перенос на рабочий сервер с помощью Git
 
-Сначала на рабочем сервере устанавливаем [../Git](macOS-web-server/Git/readme.md), после чего клонируем удаленный Git-репозиторий:
+Сначала на рабочем сервере устанавливаем [../Git](../macOS-web-server/Git/readme.md), после чего клонируем удаленный Git-репозиторий:
 
 	$ cd ~/Sites
 	$ git clone GIT@SERVER:REPOSTIROTY.git SITE
