@@ -692,13 +692,17 @@
 	$ git branch
 	* master
 
-Чтобы увидеть удаленные ветки, необходимо выполнить команду:
+Чтобы увидеть локальные и удаленные ветки, необходимо выполнить команду:
 
 	$ git branch -a
 	* master
 	remotes/origin/HEAD -> origin/master
 	remotes/origin/develop
-	remotes/origin/master	
+	remotes/origin/master
+	
+Чтобы увидеть только удаленные ветки:
+
+	$ git branch -r
 	
 Далее необходимо перейти на удаленную ветку, чтобы перенести ее в локальные, при этом отслеживание удаленной метки будет добавлено автоматически:
 
@@ -761,6 +765,20 @@
 
 	$ cd ~/Sites
 	$ git clone GIT@SERVER:localhost.git
+	
+Клонирование с переключением на нужную ветку:
+
+	$ git clone GIT@SERVER:localhost -b develop
+	
+Клонирование только нужной ветки:
+
+	$ git clone --branch=develop GIT@SERVER:localhost
+	
+Клонирование без истории всех коммитов:
+
+	$ git clone --depth=1 --branch=develop GIT@SERVER:localhost
+
+> `--depth=1` - количество последних коммитов (1). 
 
 <a id="gitolite"></a>
 ### Настройка своего Git-сервера с помощью Gitolite (предпочтительно)
