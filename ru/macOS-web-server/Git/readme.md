@@ -260,7 +260,13 @@
 
 Или группы файлов, например логи ошибок, которые забыли добавить в игнорируемые:
 
-	$ git rm log/\*.log
+	$ git rm --cached log/\*.log
+	
+Способ удаления всех игнорируемых файлов из репозитория:
+
+	$ git rm -r --cached . 
+	$ git add . 
+	$ git commit -m "Removing all files in .gitignore"
 
 <a id="mv"></a>
 #### Перемещение файлов
