@@ -39,7 +39,7 @@
 
 	$ cd ~/Sites/SITE
 
-Затем устанавливаем [../Composer](macOS-web-server/Composer/readme.md) и при необходимости обновляем  [../PHP](macOS-web-server/PHP/readme.md), после чего устанавливаем зависимости из composer.json:
+Затем устанавливаем [../Composer](../macOS-web-server/Composer/readme.md) и при необходимости обновляем  [../PHP](../macOS-web-server/PHP/readme.md), после чего устанавливаем зависимости из composer.json:
     
     $ composer install
     	# или
