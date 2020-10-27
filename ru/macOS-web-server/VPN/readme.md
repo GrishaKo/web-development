@@ -1,44 +1,75 @@
-# Заметки по использованию macOS VPN Server
+# Заметки по использованию macOS VPN
 
-[VPN server on macOS High Sierra & macOS Mojave
+- [VPN server on macOS High Sierra & macOS Mojave
 ](https://softwarerecs.stackexchange.com/questions/50816/vpn-server-on-macos-high-sierra-macos-mojave)
-
-[macOS Server
+- [macOS Server
 Service Migration Guide v1.2](https://developer.apple.com/support/downloads/macOS-Server-Service-Migration-Guide.pdf)
 
-[Time Machine](https://support.apple.com/en-us/HT201250) (ENG/[RUS](https://support.apple.com/ru-ru/HT201250)) - встроенное macOS средство резервного копирования.
-
 <!--ts-->
-  * [Подключение сетевого диска для резервных копий Time Machine](#подключение-сетевого-диска-для-резервных-копий-time-machine)
-  * [Использование компьютера Mac в качестве хранилища резервных копий Time Machine](#использование-компьютера-mac-в-качестве-хранилища-резервных-копий-time-machine)
+  * [Запуск VPN](#load-vpn)
  <!--te-->
 
-<a id="connect-network-drive"></a>
-## Подключение сетевого диска для резервных копий Time Machine
+<a id="load-vpn"></a>
+## Запуск VPN на macOS
 
-Сначала необходимо [../#подключиться к сетевому диску](../FileSharing/readme.md#connect-to-server), затем перейти в "Time Machine", нажимаем "Выбрать резервный диск" (Select Backup Disk) и в списке выбираем подключенный сетевой диск.
+Выключаем VPN в приложении macOS Server, если он есть.
 
-Если в Time Machine нет в списке сетевого диска, то может помочь утилита командной строки `tmutil`, например:
+Служба VPN сервера macOS использует демон [vpnd](https://www.unix.com/man-page/osx/5/vpnd/) в macOS для предоставления служб L2TP IPSEC VPN. Файл конфигурации `/Library/Preferences/SystemConfiguration/com.apple.RemoteAccessServers.plist`, и его формат определяется на странице руководства vpnd.
 
-	$ sudo tmutil setdestination -ap smb:/USER@IP/Backups
+В [Terminal](../Terminal/readme.md) переходим в директорию:
+
+	cd /Library/LaunchDaemons
 	
-> Также c помощью этой команды можно подключить образ диска с резервной копией Time Machine, указав путь до него через пробел сразу после команды "tmutil setdestination".
+Далее создаем файл:
+
+	sudo touch vpn.ppp.l2tp.plist
 	
-Посмотреть подключенные диски: 
+Изменяем права доступа к файлу:
+
+	sudo chown root:wheel ./vpn.ppp.l2tp.plist
 	
-	$ tmutil destinationinfo
+Открываем созданный файл:
 
-Подробнее об утилите `tmutil`:
+	sudo nano vpn.ppp.l2tp.plist
+	
+Добавляем следующее содержимое:
 
-1. [Control Time Machine from the command line](https://www.macworld.com/article/2033804/control-time-machine-from-the-command-line.html) (ENG).
-2. [Time Machine utility](https://ss64.com/osx/tmutil.html) (ENG).
-3. [Утилита Time Machine](http://osxh.ru/command/tmutil-terminal-time-machine) (RUS). 
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+	“http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<plist version="1.0">
+	  <dict>
+	    <key>Disabled</key>
+	    <true/>
+	    <key>EnableTransactions</key>
+	    <true/>
+	    <key>Label</key>
+	    <string>vpn.ppp.l2tp</string>
+	    <key>KeepAlive</key>
+	    <true/>
+	    <key>Program</key>
+	    <string>/usr/sbin/vpnd</string>
+	    <key>ProgramArguments</key>
+	    <array>
+	      <string>vpnd</string>
+	      <string>-x</string>
+	      <string>-i</string>
+	      <string>com.apple.ppp.l2tp</string>
+	    </array>
+	    <key>EnableTransactions</key>
+	    <false/>
+	    <key>EnablePressuredExit</key>
+	    <false/>
+	  </dict>
+	</plist>
 
-<a id="file-sharing"></a>
-## Использование компьютера Mac в качестве хранилища резервных копий Time Machine
+Сохраняем изменения с помощью горячих клавиш `Control + o`, подтверждаем имя файла `Enter` и закрываем редактор `Control + q`.
 
-Сначала необходимо [../#включить общий доступ к папке](../FileSharing/readme.md#enable-file-sharing), которая будет использоваться для резервных копий Time Machine и затем настроить папку для резервных копий:
+Запускаем и проверяем работу:
 
-1. В списке общих папок справа кликаем, удерживая нажатой клавишу Control, каталог, который требуется использовать для резервных копий Time Machine. 
-2. В открывшемся контекстном меню выбираем "Дополнительные параметры".
-3. В диалоговом окне "Дополнительные параметры" устанавливаем флажок "Использовать как папку для резервного копирования Time Machine".
+	sudo launchctl load -w ./vpn.ppp.l2tp.plist
+	launchctl print system/vpn.ppp.l2tp
+	
+**Текущее управление:**
+
+Настройки можно изменить после настройки vpnd, отредактировав `/Library/Preferences/SystemConfiguration/com.apple.RemoteAccessServers.plist` файл. После внесения изменений вы можете заставить службу перечитать файл конфигурации, выполнив команду `sudo killall -HUP vpnd`.
