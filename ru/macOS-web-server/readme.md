@@ -8,6 +8,7 @@
 	* [Time-Machine](TimeMachine/readme.md).
 	* [Cron](Cron/readme.md).
 	* [Postfix](Postfix/readme.md).
+	* [VPN Server](VPN/readme.md).
 	* [HomeBrew](HomeBrew/readme.md).
 * Web server:
 	* [Apache](Apache/readme.md).
