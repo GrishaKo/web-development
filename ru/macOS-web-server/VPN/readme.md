@@ -1,16 +1,16 @@
 # Заметки по использованию macOS VPN
 
-- [VPN server on macOS High Sierra & macOS Mojave
-](https://softwarerecs.stackexchange.com/questions/50816/vpn-server-on-macos-high-sierra-macos-mojave)
-- [macOS Server
-Service Migration Guide v1.2](https://developer.apple.com/support/downloads/macOS-Server-Service-Migration-Guide.pdf)
-
 <!--ts-->
   * [Запуск VPN](#load-vpn)
  <!--te-->
 
 <a id="load-vpn"></a>
 ## Запуск VPN на macOS
+
+- [VPN server on macOS High Sierra & macOS Mojave
+](https://softwarerecs.stackexchange.com/questions/50816/vpn-server-on-macos-high-sierra-macos-mojave)
+- [macOS Server
+Service Migration Guide v1.2](https://developer.apple.com/support/downloads/macOS-Server-Service-Migration-Guide.pdf)
 
 Выключаем VPN в приложении macOS Server, если он есть.
 
