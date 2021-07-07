@@ -2,21 +2,19 @@
 
 [SSH](https://en.wikipedia.org/wiki/SSH) (ENG/[RUS](https://ru.wikipedia.org/wiki/SSH)) - сетевой протокол для удаленного управления компьютером (сервером) с помощью командной строки (macOS/Linux/Windows).
 
-<!--ts-->
-  * [Ссылки](#ссылки)
-  * [Подключение к удаленному компьютеру по SSH на macOS и IOS](#подключение-к-удаленному-компьютеру-по-ssh-на-macos-и-ios)
-  * [Удаленный вход на macOS по SSH](#удаленный-вход-на-macos-по-ssh)
-  * [Настройка SSH аутентификации по ключам для подключения к удаленному компьютеру](#настройка-ssh-аутентификации-по-ключам-для-подключения-к-удаленному-компьютеру)
-     * [Ссылки](#ссылки-1)
-     * [Создание SSH-ключей](#создание-ssh-ключей)
-     * [Передача публичного SSH-ключа на удаленный компьютер](#передача-публичного-ssh-ключа-на-удаленный-компьютер)
-     * [Конфигурация SSH-сервера на удаленном комьюетере](#конфигурация-ssh-сервера-на-удаленном-комьюетере)
-     * [Настройка алиаса для команды подключения к удаленному компьютеру по SSH](#настройка-алиаса-для-команды-подключения-к-удаленному-компьютеру-по-ssh)
-  * [Подключение к MySQL на удаленном компьютере через SSH туннель](#подключение-к-mysql-на-удаленном-компьютере-через-ssh-туннель)
-  * [Обмен файлами с удаленным компьютером Mac через Finder с помощью SFTP](#обмен-файлами-с-удаленным-компьютером-Mac-через-Finder-с-помощью-SFTP)
-<!--te-->
+- [Ссылки](#links)
+- [Подключение к удаленному компьютеру по SSH на macOS и IOS](#terminal)
+- [Удаленный вход на macOS по SSH](#ssh)
+- [Настройка SSH аутентификации по ключам для подключения к удаленному компьютеру](#ssh-keys-authentication)
+ - [Ссылки](#ssh-keys-authentication-links)
+ - [Создание SSH-ключей](#ssh-keygen)
+ - [Передача публичного SSH-ключа на удаленный компьютер](#ssh-key-transfer)
+ - [Конфигурация SSH-сервера на удаленном комьюетере](#sshd-config)
+ - [Настройка алиаса для команды подключения к удаленному компьютеру по SSH](#ssh-alias)
+- [Подключение к MySQL на удаленном компьютере через SSH туннель](#ssh-mysql)
+- [Обмен файлами с удаленным компьютером Mac через Finder с помощью SFTP](#sftp)
 
-<a id="links"></a>
+<a name="links"></a>
 ## Ссылки
 
 1. [SSH KEY](https://www.ssh.com/ssh/key/) (ENG).
@@ -24,14 +22,14 @@
 3. [SSH ключи для работы с удаленными Git-репозиториями](https://www.youtube.com/watch?v=KqzVaUTCPbQ) (RUS).
 4. [How to Access Your Mac over SSH with Remote Login](https://www.booleanworld.com/access-mac-ssh-remote-login/) (ENG).
 
-<a id="terminal"></a>
+<a name="terminal"></a>
 ## Подключение к удаленному компьютеру по SSH на macOS и IOS
 
 [../MacOS Terminal](../Terminal/readme.md) - встроенное приложение в macOS для работы с командной строкой.
 
 [Termius - SSH client](https://www.termius.com) - кроссплатформенное приложение для мобильных, планшетов и компьютеров.
 
-<a id="ssh"></a>
+<a name="ssh"></a>
 ## Удаленный вход на macOS по SSH 
 
 1. Открываем "Системные настройки" (System Preferences).
@@ -43,17 +41,17 @@
 > 
 > Если же компьютер подключен к Wi-Fi сети, то будет отображаться внутренний (локальный) IP адрес и доступ будет только по локальной сети, поэтому будет необходимо настроить на роутере перенаправление [22 порта](https://support.apple.com/en-us/HT202944) (ENG/[RUS](https://support.apple.com/ru-ru/HT202944)) на компьютер по его локальному IP адресу.
 
-<a id="ssh-keys-authentication"></a>
+<a name="ssh-keys-authentication"></a>
 ## Настройка SSH аутентификации по ключам для подключения к удаленному компьютеру
 
-<a id="ssh-keys-authentication-links"></a>
+<a name="ssh-keys-authentication-links"></a>
 ### Ссылки
 
 1. [Настройка SSH сервера во FreeBSD, конфигурационный файл sshd_config](http://vds-admin.ru/ssh/nastroika-servera-ssh-vo-freebsd-fail-sshdconfig) (RUS).
 2. [Command Line SSH restart Mac OSX Mountain Lion](http://superuser.com/questions/478035/command-line-ssh-restart-mac-osx-mountain-lion) (ENG).
 3. [Create an SSH Tunnel for MySQL Remote Access](https://www.linode.com/docs/databases/mysql/securely-administer-mysql-with-an-ssh-tunnel) (ENG).
 
-<a id="ssh-keygen"></a>
+<a name="ssh-keygen"></a>
 ### Создание SSH-ключей
 
 Создадим публичный и приватный ключи на локальном компьютере, с помощью команды терминала:
@@ -82,7 +80,7 @@
 
 	$ chmod 700 ~/.ssh
 
-<a id="ssh-key-transfer"></a>
+<a name="ssh-key-transfer"></a>
 ### Передача публичного SSH-ключа на удаленный компьютер
 
 Входим на удаленный компьютер:
@@ -110,7 +108,7 @@
 	
 	ssh ROOT@SERVER -i .ssh/id_rsa_USER
 
-<a id="sshd-config"></a>	
+<a name="sshd-config"></a>	
 ### Конфигурация SSH-сервера на удаленном комьюетере	
 
 Настройка на удаленной машине конфигурационного файла `/etc/ssh/sshd_config`:
@@ -172,7 +170,7 @@
 	sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist
 	sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
-<a id="ssh-alias"></a>
+<a name="ssh-alias"></a>
 ### Настройка алиаса для команды подключения к удаленному компьютеру по SSH
 
 Вход по SSH на удаленную машину с помощью короткого имени (алиаса, например: `ssh server`) вместо полного адреса, ввода пароля и указания публичного ключа: 
@@ -203,7 +201,7 @@
 
 	clear
 
-<a id="ssh-mysql"></a>
+<a name="ssh-mysql"></a>
 ## Подключение к MySQL на удаленном компьютере через SSH туннель
 
 	ssh -L 127.0.0.1:33306:127.0.0.1:3307 ssh_server -N
@@ -214,7 +212,7 @@
 > 
 > `ssh_server` - aлиас для подключения к серверу по SSH или полный путь `ROOT@SERVER`.
 
-<a id="sftp"></a>
+<a name="sftp"></a>
 ## Обмен файлами с удаленным компьютером Mac через Finder с помощью SFTP
 
 Сначала устанавливаем [../HomeBrew](../HomeBrew/readme.md), затем с его помощью устанавливаем [osxfuse](https://osxfuse.github.io/) и [sshfs](https://github.com/libfuse/sshfs):
